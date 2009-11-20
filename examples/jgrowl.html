@@ -107,7 +107,6 @@
 		(function($){
 
 			$(document).ready(function(){
-
 				// This value can be true, false or a function to be used as a callback when the closer is clciked
 				$.jGrowl.defaults.closer = function() {
 					console.log("Closing everything!", this);
@@ -122,7 +121,6 @@
 				$.jGrowl("This notification will live a little longer.", { life: 1000 });
 				$.jGrowl("Sticky notification with a header", { header: 'A Header', sticky: true });
 				$.jGrowl("Custom theme, and a whole bunch of callbacks...", { 
-					sticky: true,
 					theme:  'manilla',
 					speed:  'slow',
 					beforeOpen: function(e,m,o) {
@@ -141,7 +139,6 @@
 
 				$.jGrowl("Custom animation test...", { 
 					theme: 'manilla',
-					sticky: true,
 					speed: 'slow',
 					animateOpen: { 
 						height: "show"
@@ -153,14 +150,29 @@
 				
 				$.jGrowl("Looks like the iPhone.", { 
 					header: 'iPhone',
-					theme: 'iphone',
-					sticky: true
+					theme: 'iphone'
 				});
+				
 
+				$.jGrowl("This message will not open because we have a callback that returns false.", {
+					beforeOpen: function() {
+						console.log("Going to open a notification, but not really...");
+					},
+					open: function() {
+						return false;
+					}
+				});
+				
+				$.jGrowl("This message will not close because we have a callback that returns false.", {
+					beforeClose: function() {
+						return false;
+					}
+				});
 				
 				$.jGrowl.defaults.closerTemplate = '<div>hide all notifications</div>';
 				
 				$('#test1').jGrowl("Testing a custom container (this one is sticky, and will also be prepended).", {
+					closer: false,
 					sticky: true, 
 					glue: 'before',
 					speed: 2000,
@@ -191,14 +203,12 @@
 				
 				$('#test2').jGrowl("Trying a background image.", { 
 					theme: 'smoke',
-					sticky: true,
 					closer: false
 				});
 				
 				$('#test2').jGrowl("This demo notification uses images from the UI flora theme to create similar styled notifications.", { 
 					theme: 'flora',
 					header: "Flora makes Fauna",
-					sticky: true,
 					closer: false
 				});
 			});
@@ -212,6 +222,8 @@
 		<p><a href="javascript:void(0);" onclick="$.jGrowl('One more message...');">Click here to create a message on demand in the #jGrowl container in the top-right corner of the screen.</a></p>
 		
 		<p><a href="javascript:void(0);" onclick="$('#test1').jGrowl('shutdown');">Shutdown jGrowl for the #test1 container in the top-left corner of the screen.</a></p>
+		
+		<p><a href="javascript:void(0);" onclick="$('#test1').jGrowl('close');">Close all in #test1.</a></p>
 		
 		<div id="random">An extra wide node, watch as the jGrowl containers stay put in the corners of the screen..</div>
 

@@ -2,6 +2,7 @@
 div.jGrowl {
 	padding: 			10px;
 	z-index: 			9999;
+	color: 				#fff;
 }
 
 /** Special IE6 Style Positioning **/
@@ -76,7 +77,6 @@ div.center div.jGrowl-notification, div.center div.jGrowl-closer {
 
 div.jGrowl div.jGrowl-notification, div.jGrowl div.jGrowl-closer {
 	background-color: 		#000;
-	color: 					#fff;
 	opacity: 				.85;
 	filter: 				alpha(opacity = 85);
 	zoom: 					1;
@@ -102,6 +102,7 @@ div.jGrowl div.jGrowl-notification div.header {
 }
 
 div.jGrowl div.jGrowl-notification div.close {
+	z-index:				99;
 	float: 					right;
 	font-weight: 			bold;
 	font-size: 				12px;
@@ -116,4 +117,11 @@ div.jGrowl div.jGrowl-closer {
 	font-size:				11px;
 	font-weight: 			bold;
 	text-align: 			center;
+}
+
+/** Hide jGrowl when printing **/
+@media print {
+	div.jGrowl {
+		display: 			none;
+	}
 }
