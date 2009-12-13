@@ -1,11 +1,11 @@
 /**
- * jGrowl 1.2.3
+ * jGrowl 1.2.4
  *
  * Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
  * and GPL (http://www.opensource.org/licenses/gpl-license.php) licenses.
  *
  * Written by Stan Lemon <stosh1985@gmail.com>
- * Last updated: 2009.11.13
+ * Last updated: 2009.12.13
  *
  * jGrowl is a jQuery plugin implementing unobtrusive userland notifications.  These 
  * notifications function similarly to the Growl Framework available for
@@ -13,6 +13,12 @@
  *
  * To Do:
  * - Move library settings to containers and allow them to be changed per container
+ *
+ * Changes in 1.2.4
+ * - Fixed IE bug with the close-all button
+ * - Fixed IE bug with the filter CSS attribute (special thanks to gotwic)
+ * - Update IE opacity CSS
+ * - Changed font sizes to use "em", and only set the base style
  *
  * Changes in 1.2.3
  * - The callbacks no longer use the container as context, instead they use the actual notification
@@ -206,6 +212,10 @@
 					}
 					
 					$(this).animate(o.animateOpen, o.speed, o.easing, function() {
+						// Fixes some anti-aliasing issues with IE filters.
+						if ($.browser.msie && (parseInt($(this).css('opacity'), 10) === 1 || parseInt($(this).css('opacity'), 10) === 0))
+							this.style.removeAttribute('filter');
+
 						$(this).data("jGrowl").created = new Date();
 					});
 				}
@@ -217,8 +227,9 @@
 				$(this).data('jGrowl.pause', true);
 				$(this).animate(o.animateClose, o.speed, o.easing, function() {
 					$(this).remove();
+					var close = o.close.apply( notification , [notification,message,o,self.element] );
 
-					if (  (close = o.close.apply( notification , [notification,message,o,self.element] )) && $.isFunction(close) )
+					if ( $.isFunction(close) )
 						close.apply( notification , [notification,message,o,self.element] );
 				});
 			}).trigger('jGrowl.beforeOpen');
