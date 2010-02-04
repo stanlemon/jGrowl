@@ -1,11 +1,11 @@
 /**
- * jGrowl 1.2.4
+ * jGrowl 1.2.5
  *
  * Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
  * and GPL (http://www.opensource.org/licenses/gpl-license.php) licenses.
  *
  * Written by Stan Lemon <stosh1985@gmail.com>
- * Last updated: 2009.12.13
+ * Last updated: 2009.12.15
  *
  * jGrowl is a jQuery plugin implementing unobtrusive userland notifications.  These 
  * notifications function similarly to the Growl Framework available for
@@ -13,6 +13,12 @@
  *
  * To Do:
  * - Move library settings to containers and allow them to be changed per container
+ *
+ * Changes in 1.2.5
+ * - Changed wrapper jGrowl's options usage to "o" instead of $.jGrowl.defaults
+ * - Added themeState option to control 'highlight' or 'error' for jQuery UI
+ * - Ammended some CSS to provide default positioning for nested usage.
+ * - Changed some CSS to be prefixed with jGrowl- to prevent namespacing issues
  *
  * Changes in 1.2.4
  * - Fixed IE bug with the close-all button
@@ -98,7 +104,7 @@
 	$.jGrowl = function( m , o ) {
 		// To maintain compatibility with older version that only supported one instance we'll create the base container.
 		if ( $('#jGrowl').size() == 0 ) 
-			$('<div id="jGrowl"></div>').addClass($.jGrowl.defaults.position).appendTo('body');
+			$('<div id="jGrowl"></div>').addClass( (o && o.position) ? o.position : $.jGrowl.defaults.position ).appendTo('body');
 
 		// Create a notification on the container.
 		$('#jGrowl').jGrowl(m,o);
@@ -137,9 +143,10 @@
 			header: 		'',
 			group: 			'',
 			sticky: 		false,
-			position: 		'top-right', // Is this still needed?
+			position: 		'top-right',
 			glue: 			'after',
 			theme: 			'default',
+			themeState: 	'highlight',
 			corners: 		'10px',
 			check: 			250,
 			life: 			3000,
@@ -184,12 +191,12 @@
 			var o = notification.options;
 
 			var notification = $(
-				'<div class="jGrowl-notification ui-state-highlight ui-corner-all' + 
+				'<div class="jGrowl-notification ' + o.themeState + ' ui-corner-all' + 
 				((o.group != undefined && o.group != '') ? ' ' + o.group : '') + '">' +
-				'<div class="close">' + o.closeTemplate + '</div>' +
-				'<div class="header">' + o.header + '</div>' +
-				'<div class="message">' + message + '</div></div>'
-			).data("jGrowl", o).addClass(o.theme).children('div.close').bind("click.jGrowl", function() {
+				'<div class="jGrowl-close">' + o.closeTemplate + '</div>' +
+				'<div class="jGrowl-header">' + o.header + '</div>' +
+				'<div class="jGrowl-message">' + message + '</div></div>'
+			).data("jGrowl", o).addClass(o.theme).children('div.jGrowl-close').bind("click.jGrowl", function() {
 				$(this).parent().trigger('jGrowl.close');
 			}).parent();
 

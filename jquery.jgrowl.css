@@ -40,31 +40,35 @@ div.ie6.center {
 }
 
 /** Normal Style Positions **/
+div.jGrowl {
+	position:			absolute;
+}
+
 body > div.jGrowl {
 	position:			fixed;
 }
 
-body > div.jGrowl.top-left {
+div.jGrowl.top-left {
 	left: 				0px;
 	top: 				0px;
 }
 
-body > div.jGrowl.top-right {
+div.jGrowl.top-right {
 	right: 				0px;
 	top: 				0px;
 }
 
-body > div.jGrowl.bottom-left {
+div.jGrowl.bottom-left {
 	left: 				0px;
 	bottom:				0px;
 }
 
-body > div.jGrowl.bottom-right {
+div.jGrowl.bottom-right {
 	right: 				0px;
 	bottom: 			0px;
 }
 
-body > div.jGrowl.center {
+div.jGrowl.center {
 	top: 				0px;
 	width: 				50%;
 	left: 				25%;
@@ -98,12 +102,12 @@ div.jGrowl div.jGrowl-notification {
 	min-height: 			40px;
 }
 
-div.jGrowl div.jGrowl-notification div.header {
+div.jGrowl div.jGrowl-notification div.jGrowl-header {
 	font-weight: 			bold;
 	font-size:				.85em;
 }
 
-div.jGrowl div.jGrowl-notification div.close {
+div.jGrowl div.jGrowl-notification div.jGrowl-close {
 	z-index:				99;
 	float: 					right;
 	font-weight: 			bold;
