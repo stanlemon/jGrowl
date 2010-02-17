@@ -263,7 +263,7 @@
 		update:	 function() {
 			$(this.element).find('div.jGrowl-notification:parent').each( function() {
 				if ( $(this).data("jGrowl") != undefined && $(this).data("jGrowl").created != undefined && 
-					 ($(this).data("jGrowl").created.getTime() + $(this).data("jGrowl").life)  < (new Date()).getTime() && 
+					 ($(this).data("jGrowl").created.getTime() + parseInt($(this).data("jGrowl").life))  < (new Date()).getTime() && 
 					 $(this).data("jGrowl").sticky != true && 
 					 ($(this).data("jGrowl.pause") == undefined || $(this).data("jGrowl.pause") != true) ) {
 
@@ -288,7 +288,7 @@
 			this.element = $(e).addClass('jGrowl').append('<div class="jGrowl-notification"></div>');
 			this.interval = setInterval( function() { 
 				$(e).data('jGrowl.instance').update(); 
-			}, this.defaults.check);
+			}, parseInt(this.defaults.check));
 			
 			if ($.browser.msie && parseInt($.browser.version) < 7 && !window["XMLHttpRequest"]) {
 				$(this.element).addClass('ie6');
