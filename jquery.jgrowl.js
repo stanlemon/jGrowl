@@ -242,7 +242,7 @@
 			}).trigger('jGrowl.beforeOpen');
 		
 			/** Optional Corners Plugin **/
-			if ( $.fn.corner != undefined ) $(notification).corner( o.corners );
+			if ( o.corners != '' && $.fn.corner != undefined ) $(notification).corner( o.corners );
 
 			/** Add a Global Closer if more than one notification exists **/
 			if ( $('div.jGrowl-notification:parent', self.element).size() > 1 && 
