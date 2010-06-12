@@ -21,6 +21,7 @@
  * - Changed some CSS to be prefixed with jGrowl- to prevent namespacing issues
  * - Added two new options - openDuration and closeDuration to allow 
  *   better control of notification open and close speeds, respectively 
+ *   Patch contributed by Jesse Vincet.
  *
  * Changes in 1.2.4
  * - Fixed IE bug with the close-all button
