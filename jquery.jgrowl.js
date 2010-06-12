@@ -22,6 +22,7 @@
  * - Added two new options - openDuration and closeDuration to allow 
  *   better control of notification open and close speeds, respectively 
  *   Patch contributed by Jesse Vincet.
+ * - Added afterOpen callback.  Patch contributed by Russel Branca.
  *
  * Changes in 1.2.4
  * - Fixed IE bug with the close-all button
@@ -161,6 +162,7 @@
 			closerTemplate: '<div>[ close all ]</div>',
 			log: 			function(e,m,o) {},
 			beforeOpen: 	function(e,m,o) {},
+			afterOpen:      function(e,m,o) {},
 			open: 			function(e,m,o) {},
 			beforeClose: 	function(e,m,o) {},
 			close: 			function(e,m,o) {},
@@ -237,8 +239,12 @@
 							this.style.removeAttribute('filter');
 
 						$(this).data("jGrowl").created = new Date();
+						
+						$(this).trigger('jGrowl.afterOpen');
 					});
 				}
+			}).bind('jGrowl.afterOpen', function() {
+				o.afterOpen.apply( notification , [notification,message,o,self.element] );
 			}).bind('jGrowl.beforeClose', function() {
 				if ( o.beforeClose.apply( notification , [notification,message,o,self.element] ) != false )
 					$(this).trigger('jGrowl.close');
