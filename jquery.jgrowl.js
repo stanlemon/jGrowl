@@ -19,6 +19,8 @@
  * - Added themeState option to control 'highlight' or 'error' for jQuery UI
  * - Ammended some CSS to provide default positioning for nested usage.
  * - Changed some CSS to be prefixed with jGrowl- to prevent namespacing issues
+ * - Added two new options - openDuration and closeDuration to allow 
+ *   better control of notification open and close speeds, respectively 
  *
  * Changes in 1.2.4
  * - Fixed IE bug with the close-all button
@@ -150,7 +152,8 @@
 			corners: 		'10px',
 			check: 			250,
 			life: 			3000,
-			speed: 			'normal',
+            closeDuration:  'normal',
+            openDuration:   'normal',
 			easing: 		'swing',
 			closer: 		true,
 			closeTemplate: '&times;',
@@ -179,6 +182,15 @@
 		/** Create a Notification **/
 		create: 	function( message , o ) {
 			var o = $.extend({}, this.defaults, o);
+
+            /* To keep backward compatibility with 1.24 and earlier, honor
+             *  'speed' if the user has set it
+             */
+
+            if (typeof o.speed !== 'undefined') {
+                o.openDuration = o.speed;
+                o.closeDuration = o.speed;
+            }
 
 			this.notifications.push({ message: message , options: o });
 			
@@ -218,7 +230,7 @@
 						$('div.jGrowl-notification:first', self.element).before(notification);
 					}
 					
-					$(this).animate(o.animateOpen, o.speed, o.easing, function() {
+					$(this).animate(o.animateOpen, o.openDuration, o.easing, function() {
 						// Fixes some anti-aliasing issues with IE filters.
 						if ($.browser.msie && (parseInt($(this).css('opacity'), 10) === 1 || parseInt($(this).css('opacity'), 10) === 0))
 							this.style.removeAttribute('filter');
@@ -232,7 +244,7 @@
 			}).bind('jGrowl.close', function() {
 				// Pause the notification, lest during the course of animation another close event gets called.
 				$(this).data('jGrowl.pause', true);
-				$(this).animate(o.animateClose, o.speed, o.easing, function() {
+				$(this).animate(o.animateClose, o.closeDuration, o.easing, function() {
 					$(this).remove();
 					var close = o.close.apply( notification , [notification,message,o,self.element] );
 
