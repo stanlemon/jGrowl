@@ -154,15 +154,15 @@
 			corners: 		'10px',
 			check: 			250,
 			life: 			3000,
-            closeDuration:  'normal',
-            openDuration:   'normal',
+			closeDuration:  'normal',
+			openDuration:   'normal',
 			easing: 		'swing',
 			closer: 		true,
 			closeTemplate: '&times;',
 			closerTemplate: '<div>[ close all ]</div>',
 			log: 			function(e,m,o) {},
 			beforeOpen: 	function(e,m,o) {},
-			afterOpen:      function(e,m,o) {},
+			afterOpen: 		function(e,m,o) {},
 			open: 			function(e,m,o) {},
 			beforeClose: 	function(e,m,o) {},
 			close: 			function(e,m,o) {},
@@ -186,14 +186,11 @@
 		create: 	function( message , o ) {
 			var o = $.extend({}, this.defaults, o);
 
-            /* To keep backward compatibility with 1.24 and earlier, honor
-             *  'speed' if the user has set it
-             */
-
-            if (typeof o.speed !== 'undefined') {
-                o.openDuration = o.speed;
-                o.closeDuration = o.speed;
-            }
+			/* To keep backward compatibility with 1.24 and earlier, honor 'speed' if the user has set it */
+			if (typeof o.speed !== 'undefined') {
+				o.openDuration = o.speed;
+				o.closeDuration = o.speed;
+			}
 
 			this.notifications.push({ message: message , options: o });
 			
@@ -269,7 +266,7 @@
 				$(this.defaults.closerTemplate).addClass('jGrowl-closer ui-state-highlight ui-corner-all').addClass(this.defaults.theme)
 					.appendTo(self.element).animate(this.defaults.animateOpen, this.defaults.speed, this.defaults.easing)
 					.bind("click.jGrowl", function() {
-						$(this).siblings().children('div.close').trigger("click.jGrowl");
+						$(this).siblings().trigger("jGrowl.beforeClose");
 
 						if ( $.isFunction( self.defaults.closer ) ) {
 							self.defaults.closer.apply( $(this).parent()[0] , [$(this).parent()[0]] );
