@@ -249,11 +249,12 @@
 				// Pause the notification, lest during the course of animation another close event gets called.
 				$(this).data('jGrowl.pause', true);
 				$(this).animate(o.animateClose, o.closeDuration, o.easing, function() {
-					$(this).remove();
-					var close = o.close.apply( notification , [notification,message,o,self.element] );
-
-					if ( $.isFunction(close) )
-						close.apply( notification , [notification,message,o,self.element] );
+					if ( $.isFunction(close) ) {
+						if ( close.apply( notification , [notification,message,o,self.element] ) !== false )
+							$(this).remove();
+					} else {
+						$(this).remove();
+					}
 				});
 			}).trigger('jGrowl.beforeOpen');
 		
