@@ -75,10 +75,12 @@ $(this).trigger("jGrowl.close");
 }).bind("jGrowl.close",function(){
 $(this).data("jGrowl.pause",true);
 $(this).animate(o.animateClose,o.closeDuration,o.easing,function(){
+if($.isFunction(close)){
+if(close.apply(_1c,[_1c,_1e,o,_1d.element])!==false){
 $(this).remove();
-var _20=o.close.apply(_1c,[_1c,_1e,o,_1d.element]);
-if($.isFunction(_20)){
-_20.apply(_1c,[_1c,_1e,o,_1d.element]);
+}
+}else{
+$(this).remove();
 }
 });
 }).trigger("jGrowl.beforeOpen");
