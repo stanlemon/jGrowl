@@ -249,8 +249,8 @@
 				// Pause the notification, lest during the course of animation another close event gets called.
 				$(this).data('jGrowl.pause', true);
 				$(this).animate(o.animateClose, o.closeDuration, o.easing, function() {
-					if ( $.isFunction(close) ) {
-						if ( close.apply( notification , [notification,message,o,self.element] ) !== false )
+					if ( $.isFunction(o.close) ) {
+						if ( o.close.apply( notification , [notification,message,o,self.element] ) !== false )
 							$(this).remove();
 					} else {
 						$(this).remove();
