@@ -59,12 +59,15 @@
 				-webkit-border-radius:	0px;
 				opacity: 				.90;
 				filter: 				alpha(opacity = 90);
-				width: 					245px;
+				width: 					235px;
 				height: 				137px;
-				padding: 				0px;
 				overflow: 				hidden;
 				border-color: 			#5ab500;
 				color: 					#fff;
+			}
+
+			div.jGrowl div.iphone .jGrowl-close {
+				padding-right: 			20px;
 			}
 
 			div.jGrowl div.iphone div.message {
@@ -147,6 +150,7 @@
 				});
 				
 				$.jGrowl("Looks like the iPhone.", { 
+					sticky: true,
 					header: 'iPhone',
 					theme: 'iphone'
 				});

@@ -1,6 +1,5 @@
 
 div.jGrowl {
-	padding: 			10px;
 	z-index: 			9999;
 	color: 				#fff;
 	font-size: 			12px;
@@ -100,6 +99,11 @@ div.jGrowl div.jGrowl-notification, div.jGrowl div.jGrowl-closer {
 
 div.jGrowl div.jGrowl-notification {
 	min-height: 			40px;
+}
+
+div.jGrowl div.jGrowl-notification,
+div.jGrowl div.jGrowl-closer {
+	margin: 				10px;
 }
 
 div.jGrowl div.jGrowl-notification div.jGrowl-header {
