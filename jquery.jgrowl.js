@@ -268,7 +268,7 @@
 			/** Add a Global Closer if more than one notification exists **/
 			if ( $('div.jGrowl-notification:parent', self.element).size() > 1 && 
 				 $('div.jGrowl-closer', self.element).size() == 0 && this.defaults.closer != false ) {
-				$(this.defaults.closerTemplate).addClass('jGrowl-closer ui-state-highlight ui-corner-all').addClass(this.defaults.theme)
+				$(this.defaults.closerTemplate).addClass('jGrowl-closer ' + this.defaults.themeState + ' ui-corner-all').addClass(this.defaults.theme)
 					.appendTo(self.element).animate(this.defaults.animateOpen, this.defaults.speed, this.defaults.easing)
 					.bind("click.jGrowl", function() {
 						$(this).siblings().trigger("jGrowl.beforeClose");
