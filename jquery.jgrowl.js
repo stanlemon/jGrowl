@@ -205,6 +205,9 @@
 			var message = notification.message;
 			var o = notification.options;
 
+			// Support for jQuery theme-states, if this is not used it displays a widget header
+			o.themeState = (o.themeState == '') ? '' : 'ui-state-' + o.themeState;
+
 			var notification = $(
 				'<div class="jGrowl-notification ' + o.themeState + ' ui-corner-all' + 
 				((o.group != undefined && o.group != '') ? ' ' + o.group : '') + '">' +
