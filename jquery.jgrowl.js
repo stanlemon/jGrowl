@@ -246,7 +246,7 @@
 					
 					$(this).animate(o.animateOpen, o.openDuration, o.easing, function() {
 						// Fixes some anti-aliasing issues with IE filters.
-						if (!$.support.opacity) 
+						if ($.support.opacity === false) 
 							this.style.removeAttribute('filter');
 
 						if ( $(this).data("jGrowl") != null ) // Happens when a notification is closing before it's open.
