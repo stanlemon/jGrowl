@@ -1,5 +1,5 @@
 /**
- * jGrowl 1.2.7
+ * jGrowl 1.2.8
  *
  * Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
  * and GPL (http://www.opensource.org/licenses/gpl-license.php) licenses.
@@ -14,7 +14,7 @@
  * To Do:
  * - Move library settings to containers and allow them to be changed per container
  *
- * Changes in 1.2.7
+ * Changes in 1.2.8
  * - Fixes for jQuery 1.9 and the MSIE6 check, note that with jQuery 2.0 support
  *   jGrowl intends to drop support for IE6 altogether
  *
