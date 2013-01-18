@@ -1,11 +1,11 @@
 /**
- * jGrowl 1.2.6
+ * jGrowl 1.2.7
  *
  * Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
  * and GPL (http://www.opensource.org/licenses/gpl-license.php) licenses.
  *
  * Written by Stan Lemon <stosh1985@gmail.com>
- * Last updated: 2011.03.27
+ * Last updated: 2013.01.17
  *
  * jGrowl is a jQuery plugin implementing unobtrusive userland notifications.  These 
  * notifications function similarly to the Growl Framework available for
@@ -13,6 +13,10 @@
  *
  * To Do:
  * - Move library settings to containers and allow them to be changed per container
+ *
+ * Changes in 1.2.7
+ * - Fixes for jQuery 1.9 and the MSIE6 check, note that with jQuery 2.0 support
+ *   jGrowl intends to drop support for IE6 altogether
  *
  * Changes in 1.2.6
  * - Fixed js error when a notification is opening and closing at the same time
@@ -106,6 +110,10 @@
  * - Namespaced all events
  */
 (function($) {
+	/** Compatibility holdover for 1.9 to check IE6 **/
+	var $ie6 = (function(){
+		return false === $.support.boxModel && $.support.objectAll && $support.leadingWhitespace;
+	})();
 
 	/** jGrowl Wrapper - Establish a base jGrowl Container for compatibility with older releases. **/
 	$.jGrowl = function( m , o ) {
@@ -238,7 +246,7 @@
 					
 					$(this).animate(o.animateOpen, o.openDuration, o.easing, function() {
 						// Fixes some anti-aliasing issues with IE filters.
-						if ($.browser.msie && (parseInt($(this).css('opacity'), 10) === 1 || parseInt($(this).css('opacity'), 10) === 0))
+						if (!$.support.opacity) 
 							this.style.removeAttribute('filter');
 
 						if ( $(this).data("jGrowl") != null ) // Happens when a notification is closing before it's open.
@@ -314,7 +322,7 @@
 				$(e).data('jGrowl.instance').update(); 
 			}, parseInt(this.defaults.check));
 			
-			if ($.browser.msie && parseInt($.browser.version) < 7 && !window["XMLHttpRequest"]) {
+			if ($ie6) {
 				$(this.element).addClass('ie6');
 			}
 		},

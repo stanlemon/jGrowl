@@ -95,8 +95,7 @@
 			}
 
 		</style>
-		<script type="text/javascript" src="../jquery-1.4.2.js"></script>
-		<script type="text/javascript" src="./jquery.ui.all.js"></script>
+		<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
 		<script type="text/javascript" src="../jquery.jgrowl.js"></script>
 		<script type="text/javascript">
 
@@ -178,7 +177,6 @@
 					sticky: true, 
 					glue: 'before',
 					speed: 2000,
-					easing: 'easeInOutElastic',
 					animateOpen: { 
 						height: "show",
 						width: "show"
@@ -192,7 +190,6 @@
 				$('#test1').jGrowl("Another custom container test.", { 
 					glue: 'before',
 					speed: 2000,
-					easing: 'easeInOutExpo',
 					animateOpen: { 
 						height: "show",
 						width: "show"
@@ -205,12 +202,6 @@
 				
 				$('#test2').jGrowl("Trying a background image.", { 
 					theme: 'smoke',
-					closer: false
-				});
-				
-				$('#test2').jGrowl("This demo notification uses images from the UI flora theme to create similar styled notifications.", { 
-					theme: 'flora',
-					header: "Flora makes Fauna",
 					closer: false
 				});
 			});
