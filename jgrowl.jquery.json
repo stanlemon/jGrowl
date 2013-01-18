@@ -28,8 +28,8 @@
     }
   ],
   "bugs": "https://github.com/stanlemon/jGrowl/issues",
-  "homepage": "https://github.com/stanlemon/jGrowl"
-  "docs": "https://github.com/stanlemon/jGrowl"
+  "homepage": "https://github.com/stanlemon/jGrowl",
+  "docs": "https://github.com/stanlemon/jGrowl",
   "download": "https://github.com/stanlemon/jGrowl/archive/master.zip",
   "dependencies": {
     "jquery": ">=1.4"
