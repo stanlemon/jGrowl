@@ -19,14 +19,12 @@
 				
 				$.jGrowl.defaults.closer = false;
 
-				if ( !$.browser.safari ) {
-					$.jGrowl.defaults.animateOpen = {
-						width: 'show'
-					};
-					$.jGrowl.defaults.animateClose = {
-						width: 'hide'
-					};
-				}
+				$.jGrowl.defaults.animateOpen = {
+					width: 'show'
+				};
+				$.jGrowl.defaults.animateClose = {
+					width: 'hide'
+				};
 
 				$.jGrowl("Hello world!", { sticky: true });
 				$.jGrowl("Another notification.", { sticky: true });
