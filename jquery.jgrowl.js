@@ -226,7 +226,7 @@
 				'<div class="jGrowl-header">' + o.header + '</div>' +
 				'<div class="jGrowl-message">' + message + '</div></div>'
 			).data("jGrowl", o).addClass(o.theme).children('div.jGrowl-close').bind("click.jGrowl", function() {
-				$(this).parent().trigger('jGrowl.close');
+				$(this).parent().trigger('jGrowl.beforeClose');
 			}).parent();
 
 
