@@ -324,8 +324,10 @@
 		/** Setup the jGrowl Notification Container **/
 		startup:	function(e) {
 			this.element = $(e).addClass('jGrowl').append('<div class="jGrowl-notification"></div>');
-			this.interval = setInterval( function() { 
-				$(e).data('jGrowl.instance').update(); 
+			this.interval = setInterval( function() {
+				if ($(e).data('jGrowl.instance')) {
+					$(e).data('jGrowl.instance').update();
+				} 
 			}, parseInt(this.defaults.check));
 			
 			if ($ie6) {
