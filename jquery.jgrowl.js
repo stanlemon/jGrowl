@@ -222,15 +222,14 @@
 			// Support for jQuery theme-states, if this is not used it displays a widget header
 			o.themeState = (o.themeState == '') ? '' : 'ui-state-' + o.themeState;
 
-			var notification = $(
-				'<div class="jGrowl-notification ' + o.themeState + ' ui-corner-all' + 
-				((o.group != undefined && o.group != '') ? ' ' + o.group : '') + '">' +
-				'<div class="jGrowl-close">' + o.closeTemplate + '</div>' +
-				'<div class="jGrowl-header">' + o.header + '</div>' +
-				'<div class="jGrowl-message">' + message + '</div></div>'
-			).data("jGrowl", o).addClass(o.theme).children('div.jGrowl-close').bind("click.jGrowl", function() {
-				$(this).parent().trigger('jGrowl.beforeClose');
-		        })
+			var notification = $('<div/>')
+		        .addClass('jGrowl-notification ' + o.themeState + ' ui-corner-all' + ((o.group != undefined && o.group != '') ? ' ' + o.group : ''))
+		        .append($('<div/>').addClass('jGrowl-close').html(o.closeTemplate))
+		        .append($('<div/>').addClass('jGrowl-header').html(o.header))
+		        .append($('<div/>').addClass('jGrowl-message').html(message))
+		        .data("jGrowl", o).addClass(o.theme).children('div.jGrowl-close').bind("click.jGrowl", function() {
+		        	$(this).parent().trigger('jGrowl.beforeClose');
+		        })		      
 		        .parent();
 
 
