@@ -230,7 +230,8 @@
 				'<div class="jGrowl-message">' + message + '</div></div>'
 			).data("jGrowl", o).addClass(o.theme).children('div.jGrowl-close').bind("click.jGrowl", function() {
 				$(this).parent().trigger('jGrowl.beforeClose');
-			}).parent();
+		        })
+		        .parent();
 
 
 			/** Notification Actions **/
