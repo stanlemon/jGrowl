@@ -228,8 +228,8 @@
 		        .append($('<div/>').addClass('jGrowl-header').html(o.header))
 		        .append($('<div/>').addClass('jGrowl-message').html(message))
 		        .data("jGrowl", o).addClass(o.theme).children('div.jGrowl-close').bind("click.jGrowl", function() {
-		        	$(this).parent().trigger('jGrowl.beforeClose');
-		        })		      
+		        	$(this).parent().trigger('jGrowl.beforeClose');		        
+		        })
 		        .parent();
 
 
