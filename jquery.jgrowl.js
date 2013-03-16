@@ -335,8 +335,9 @@
 
 		/** Shutdown jGrowl, removing it and clearing the interval **/
 		shutdown:   function() {
-			$(this.element).removeClass('jGrowl').find('div.jGrowl-notification').remove();
-			clearInterval( this.interval );
+			$(this.element).removeClass('jGrowl')
+				.find('div.jGrowl-notification').trigger('jGrowl.close')
+				.parent().empty()
 		},
 		
 		close: 	function() {
