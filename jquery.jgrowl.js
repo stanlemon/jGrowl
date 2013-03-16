@@ -1,5 +1,5 @@
 /**
- * jGrowl 1.2.10
+ * jGrowl 1.2.11
  *
  * Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
  * and GPL (http://www.opensource.org/licenses/gpl-license.php) licenses.
@@ -13,6 +13,9 @@
  *
  * To Do:
  * - Move library settings to containers and allow them to be changed per container
+ *
+ * Changes in 1.2.11
+ * - Fix artifacts left behind by the shutdown method and text-cleanup
  *
  * Changes in 1.2.10
  * - Fix beforeClose to be called in click event
