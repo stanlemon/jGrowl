@@ -160,47 +160,47 @@
 
 		/** Default JGrowl Settings **/
 		defaults: {
-			pool: 			0,
-			header: 		'',
-			group: 			'',
-			sticky: 		false,
-			position: 		'top-right',
-			glue: 			'after',
-			theme: 			'default',
-			themeState: 	'highlight',
-			corners: 		'10px',
-			check: 			250,
-			life: 			3000,
+			pool:			 0,
+			header:		 '',
+			group:			 '',
+			sticky:		 false,
+			position:		 'top-right',
+			glue:			 'after',
+			theme:			 'default',
+			themeState:	 'highlight',
+			corners:		 '10px',
+			check:			 250,
+			life:			 3000,
 			closeDuration:  'normal',
 			openDuration:   'normal',
-			easing: 		'swing',
-			closer: 		true,
+			easing:		 'swing',
+			closer:		 true,
 			closeTemplate: '&times;',
 			closerTemplate: '<div>[ close all ]</div>',
-			log: 			function(e,m,o) {},
-			beforeOpen: 	function(e,m,o) {},
-			afterOpen: 		function(e,m,o) {},
-			open: 			function(e,m,o) {},
-			beforeClose: 	function(e,m,o) {},
-			close: 			function(e,m,o) {},
-			animateOpen: 	{
-				opacity: 	'show'
+			log:			 function(e,m,o) {},
+			beforeOpen:	 function(e,m,o) {},
+			afterOpen:		 function(e,m,o) {},
+			open:			 function(e,m,o) {},
+			beforeClose:	 function(e,m,o) {},
+			close:			 function(e,m,o) {},
+			animateOpen:	 {
+				opacity:	 'show'
 			},
-			animateClose: 	{
-				opacity: 	'hide'
+			animateClose:	 {
+				opacity:	 'hide'
 			}
 		},
 		
 		notifications: [],
 		
 		/** jGrowl Container Node **/
-		element: 	null,
+		element:	 null,
 	
 		/** Interval Function **/
 		interval:   null,
 		
 		/** Create a Notification **/
-		create: 	function( message , o ) {
+		create:	 function( message , o ) {
 			var o = $.extend({}, this.defaults, o);
 
 			/* To keep backward compatibility with 1.24 and earlier, honor 'speed' if the user has set it */
@@ -214,7 +214,7 @@
 			o.log.apply( this.element , [this.element,message,o] );
 		},
 		
-		render: 		function( notification ) {
+		render:		 function( notification ) {
 			var self = this;
 			var message = notification.message;
 			var o = notification.options;
@@ -223,14 +223,14 @@
 			o.themeState = (o.themeState == '') ? '' : 'ui-state-' + o.themeState;
 
 			var notification = $('<div/>')
-		        .addClass('jGrowl-notification ' + o.themeState + ' ui-corner-all' + ((o.group != undefined && o.group != '') ? ' ' + o.group : ''))
-		        .append($('<div/>').addClass('jGrowl-close').html(o.closeTemplate))
-		        .append($('<div/>').addClass('jGrowl-header').html(o.header))
-		        .append($('<div/>').addClass('jGrowl-message').html(message))
-		        .data("jGrowl", o).addClass(o.theme).children('div.jGrowl-close').bind("click.jGrowl", function() {
-		        	$(this).parent().trigger('jGrowl.beforeClose');		        
-		        })
-		        .parent();
+				.addClass('jGrowl-notification ' + o.themeState + ' ui-corner-all' + ((o.group != undefined && o.group != '') ? ' ' + o.group : ''))
+				.append($('<div/>').addClass('jGrowl-close').html(o.closeTemplate))
+				.append($('<div/>').addClass('jGrowl-header').html(o.header))
+				.append($('<div/>').addClass('jGrowl-message').html(message))
+				.data("jGrowl", o).addClass(o.theme).children('div.jGrowl-close').bind("click.jGrowl", function() {
+					$(this).parent().trigger('jGrowl.beforeClose');				
+				})
+				.parent();
 
 
 			/** Notification Actions **/
@@ -340,7 +340,7 @@
 				.parent().empty()
 		},
 		
-		close: 	function() {
+		close:	 function() {
 			$(this.element).find('div.jGrowl-notification').each(function(){
 				$(this).trigger('jGrowl.beforeClose');
 			});
