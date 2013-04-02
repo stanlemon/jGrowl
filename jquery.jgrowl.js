@@ -167,6 +167,7 @@
 			header:		 '',
 			group:			 '',
 			sticky:		 false,
+			replace:  		 false,
 			position:		 'top-right',
 			glue:			 'after',
 			theme:			 'default',
@@ -312,6 +313,10 @@
 					$(this).trigger('jGrowl.beforeClose');
 				}
 			});
+
+			if ( this.defaults.replace && (this.notifications.length > 1) &&
+				 ($(this.element).find('div.jGrowl-notification:parent').size() == this.defaults.pool) )
+				$('div.jGrowl-notification:last').remove();
 
 			if ( this.notifications.length > 0 &&
 				 (this.defaults.pool == 0 || $(this.element).find('div.jGrowl-notification:parent').size() < this.defaults.pool) )
