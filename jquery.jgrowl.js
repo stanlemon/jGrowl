@@ -14,7 +14,10 @@
  * To Do:
  * - Move library settings to containers and allow them to be changed per container
  *
- * Changes in 1.1.12
+ * Changes in 1.2.13
+ * - Fixed clearing interval when the container shuts down
+ *
+ * Changes in 1.2.12
  * - Added compressed versions using UglifyJS and Sqwish
  * - Improved README with configuration options explanation
  * - Added a source map
@@ -344,6 +347,8 @@
 			$(this.element).removeClass('jGrowl')
 				.find('div.jGrowl-notification').trigger('jGrowl.close')
 				.parent().empty()
+
+			clearInterval(this.interval);
 		},
 
 		close:	 function() {
