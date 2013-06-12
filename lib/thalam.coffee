@@ -2,16 +2,17 @@ define ['jquery', 'underscore', 'backbone'], ($, _, BackBone) ->
 	p = (text) -> console.log text
 
 	class Notification extends Backbone.Model
-		title: ""
-		message: ""
-		message_is_html: false
+		defaults:
+			title: ""
+			message: ""
+			message_is_html: false
 
-		# list of classes (used for theming)
-		classes: ['notification']
+			# list of classes (used for theming)
+			classes: ['notification']
 
-		# if timeout = 0 then it will not have a timeout (sticky)
-		# timeouts can be set and changed even after a notification is made
-		timeout: 1000
+			# if timeout = 0 then it will not have a timeout (sticky)
+			# timeouts can be set and changed even after a notification is made
+			timeout: 0
 
 		###*
 		 * set a timout that will trigger model.destroy(). triggered by
@@ -19,49 +20,56 @@ define ['jquery', 'underscore', 'backbone'], ($, _, BackBone) ->
 		 * @private
 		###
 		_set_timeout: ->
-			window.clearTimeout @_timeout_id
-			@_timeout_id = window.setTimeout(
-				(notification) => notification.destroy(),
-				@timeout,
-				@,
-			)
+			p '_set_timeout Notification'
+			clearTimeout @_timeout_id
+			if @get('timeout') isnt 0
+				@_timeout_id = setTimeout(
+					((notification) ->
+						notification.destroy()
+						return
+					),
+					@get('timeout'),
+					@,
+				)
+			return
 
 		###*
 		 * delete model and view. triggered by model.destroy()
 		 * @private
 		###
 		_close: () ->
+			p '_close Notification'
 			@view.remove()
 
 		initialize: () ->
 			_.bindAll @
 			p 'init Notification'
-			@bind('destroy', @_close)
-			@bind('change:timeout', @_set_timeout)
+			@on(
+				'destroy': @_close
+				'change:timeout': @_set_timeout
+			)
+			@_set_timeout()
 
 
 	class NotificationView extends Backbone.View
 		tagName: 'div'
 
 		events:
-			"click .close": -> @model.destroy,
+			"click .close": -> @model.destroy()
 
 		render: ->
-			# build string for notification
-			@className = @model.classes.join ' '
-			p 'classes:' + @className
+			@className = @model.get('classes').join ' '
+			p 'classes: ' + @className
 			
-			message_tag = if @model.message_is_html then 'div' else 'p'
+			message_tag = if @model.get 'message_is_html' then 'div' else 'p'
 
 			@el.innerHTML = """
-				<div class="close">&times;</div>
-				<h1>#{@model.title}</h1>
+				<button class="close">&times;</button>
+				<h1>#{@model.get 'title'}</h1>
 				<#{message_tag} class="message">
-					#{@model.message}
+					#{@model.get 'message'}
 				</#{message_tag}>
 			"""
-
-			return @ # so render().el can be appended to NotificationsView
 
 		initialize: ->
 			_.bindAll @
@@ -82,9 +90,6 @@ define ['jquery', 'underscore', 'backbone'], ($, _, BackBone) ->
 
 	class Notifications extends Backbone.Collection
 		model: Notification
-
-		events:
-			'add': -> p 'added'
 
 		###*
 		 * close all the notifications in the collection. triggered when close_all
@@ -121,9 +126,8 @@ define ['jquery', 'underscore', 'backbone'], ($, _, BackBone) ->
 		###
 		_add_notification: (notification) ->
 			p 'NotificationsView _add_notification'
-			p notification
 			notification_view = new NotificationView model: notification
-			@$el.notification_container.append notification_view.el
+			@notification_container.append notification_view.el
 
 		initialize: ->
 			_.bindAll @
@@ -139,8 +143,8 @@ define ['jquery', 'underscore', 'backbone'], ($, _, BackBone) ->
 			@render()
 
 			@collection.on(
-				'change:length', @render
-				'add', @_add_notification
+				'change:length': @render
+				'add': @_add_notification
 			)
 			return
 

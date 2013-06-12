@@ -23,10 +23,18 @@
     });
     console.log(Thalam);
     $('body').append(Thalam.el);
-    Thalam.collection.add({
-      title: 'blah',
-      message: 'meh'
-    });
+    Thalam.collection.add([
+      {
+        title: 'blah',
+        message: 'meh'
+      }
+    ]);
+    Thalam.collection.add([
+      {
+        title: 'blah',
+        message: 'meh'
+      }
+    ]);
   });
 
 }).call(this);

@@ -15,15 +15,13 @@
         return _ref;
       }
 
-      Notification.prototype.title = "";
-
-      Notification.prototype.message = "";
-
-      Notification.prototype.message_is_html = false;
-
-      Notification.prototype.classes = ['notification'];
-
-      Notification.prototype.timeout = 1000;
+      Notification.prototype.defaults = {
+        title: "",
+        message: "",
+        message_is_html: false,
+        classes: ['notification'],
+        timeout: 0
+      };
 
       /**
       		 * set a timout that will trigger model.destroy(). triggered by
@@ -33,11 +31,13 @@
 
 
       Notification.prototype._set_timeout = function() {
-        var _this = this;
-        window.clearTimeout(this._timeout_id);
-        return this._timeout_id = window.setTimeout(function(notification) {
-          return notification.destroy();
-        }, this.timeout, this);
+        p('_set_timeout Notification');
+        clearTimeout(this._timeout_id);
+        if (this.get('timeout') !== 0) {
+          this._timeout_id = setTimeout((function(notification) {
+            notification.destroy();
+          }), this.get('timeout'), this);
+        }
       };
 
       /**
@@ -47,14 +47,18 @@
 
 
       Notification.prototype._close = function() {
+        p('_close Notification');
         return this.view.remove();
       };
 
       Notification.prototype.initialize = function() {
         _.bindAll(this);
         p('init Notification');
-        this.bind('destroy', this._close);
-        return this.bind('change:timeout', this._set_timeout);
+        this.on({
+          'destroy': this._close,
+          'change:timeout': this._set_timeout
+        });
+        return this._set_timeout();
       };
 
       return Notification;
@@ -72,17 +76,16 @@
 
       NotificationView.prototype.events = {
         "click .close": function() {
-          return this.model.destroy;
+          return this.model.destroy();
         }
       };
 
       NotificationView.prototype.render = function() {
         var message_tag;
-        this.className = this.model.classes.join(' ');
-        p('classes:' + this.className);
-        message_tag = this.model.message_is_html ? 'div' : 'p';
-        this.el.innerHTML = "<div class=\"close\">&times;</div>\n<h1>" + this.model.title + "</h1>\n<" + message_tag + " class=\"message\">\n	" + this.model.message + "\n</" + message_tag + ">";
-        return this;
+        this.className = this.model.get('classes').join(' ');
+        p('classes: ' + this.className);
+        message_tag = this.model.get('message_is_html') ? 'div' : 'p';
+        return this.el.innerHTML = "<button class=\"close\">&times;</button>\n<h1>" + (this.model.get('title')) + "</h1>\n<" + message_tag + " class=\"message\">\n	" + (this.model.get('message')) + "\n</" + message_tag + ">";
       };
 
       NotificationView.prototype.initialize = function() {
@@ -109,12 +112,6 @@
       }
 
       Notifications.prototype.model = Notification;
-
-      Notifications.prototype.events = {
-        'add': function() {
-          return p('added');
-        }
-      };
 
       /**
       		 * close all the notifications in the collection. triggered when close_all
@@ -170,11 +167,10 @@
       NotificationsView.prototype._add_notification = function(notification) {
         var notification_view;
         p('NotificationsView _add_notification');
-        p(notification);
         notification_view = new NotificationView({
           model: notification
         });
-        return this.$el.notification_container.append(notification_view.el);
+        return this.notification_container.append(notification_view.el);
       };
 
       NotificationsView.prototype.initialize = function() {
@@ -185,7 +181,10 @@
         this.close_all_button = this.$el.find('.close_all');
         this.notification_container = this.$el.find('.notification_container');
         this.render();
-        this.collection.on('change:length', this.render, 'add', this._add_notification);
+        this.collection.on({
+          'change:length': this.render,
+          'add': this._add_notification
+        });
       };
 
       return NotificationsView;

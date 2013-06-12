@@ -16,9 +16,13 @@ require ['jquery', 'thalam'], ($, t) ->
 	console.log Thalam
 	$('body').append(Thalam.el)
 
-	Thalam.collection.add(
+	Thalam.collection.add([
 		title: 'blah'
 		message: 'meh'
-	)
+	])
+	Thalam.collection.add([
+		title: 'blah'
+		message: 'meh'
+	])
 
 	return
