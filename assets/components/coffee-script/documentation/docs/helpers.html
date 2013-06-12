@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>helpers.coffee</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="browser.html">
+                browser.coffee
+              </a>
+            
+              
+              <a class="source" href="cake.html">
+                cake.coffee
+              </a>
+            
+              
+              <a class="source" href="coffee-script.html">
+                coffee-script.coffee
+              </a>
+            
+              
+              <a class="source" href="command.html">
+                command.coffee
+              </a>
+            
+              
+              <a class="source" href="grammar.html">
+                grammar.coffee
+              </a>
+            
+              
+              <a class="source" href="helpers.html">
+                helpers.coffee
+              </a>
+            
+              
+              <a class="source" href="index.html">
+                index.coffee
+              </a>
+            
+              
+              <a class="source" href="lexer.html">
+                lexer.coffee
+              </a>
+            
+              
+              <a class="source" href="nodes.html">
+                nodes.coffee
+              </a>
+            
+              
+              <a class="source" href="optparse.html">
+                optparse.coffee
+              </a>
+            
+              
+              <a class="source" href="repl.html">
+                repl.coffee
+              </a>
+            
+              
+              <a class="source" href="rewriter.html">
+                rewriter.coffee
+              </a>
+            
+              
+              <a class="source" href="scope.html">
+                scope.litcoffee
+              </a>
+            
+              
+              <a class="source" href="sourcemap.html">
+                sourcemap.litcoffee
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>helpers.coffee</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>This file contains the common helper functions that we&#39;d like to share among
+the <strong>Lexer</strong>, <strong>Rewriter</strong>, and the <strong>Nodes</strong>. Merge objects, flatten
+arrays, count characters, that sort of thing.
+</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Peek at the beginning of a given string to see if it matches a sequence.
+</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.<span class="function"><span class="title">starts</span></span> = (string, literal, start) -&gt;
+  literal <span class="keyword">is</span> string.substr start, literal.length</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Peek at the end of a given string to see if it matches a sequence.
+</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.<span class="function"><span class="title">ends</span></span> = (string, literal, back) -&gt;
+  len = literal.length
+  literal <span class="keyword">is</span> string.substr string.length - len - (back <span class="keyword">or</span> <span class="number">0</span>), len</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Repeat a string <code>n</code> times.
+</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.repeat = <span class="function"><span class="title">repeat</span></span> = (str, n) -&gt;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Use clever algorithm to have O(log(n)) string concatenation operations.
+</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  res = <span class="string">''</span>
+  <span class="keyword">while</span> n &gt; <span class="number">0</span>
+    res += str <span class="keyword">if</span> n &amp; <span class="number">1</span>
+    n &gt;&gt;&gt;= <span class="number">1</span>
+    str += str
+  res</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>Trim out all falsy values from an array.
+</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.<span class="function"><span class="title">compact</span></span> = (array) -&gt;
+  item <span class="keyword">for</span> item <span class="keyword">in</span> array <span class="keyword">when</span> item</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Count the number of occurrences of a string in a string.
+</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.<span class="function"><span class="title">count</span></span> = (string, substr) -&gt;
+  num = pos = <span class="number">0</span>
+  <span class="keyword">return</span> <span class="number">1</span>/<span class="number">0</span> <span class="keyword">unless</span> substr.length
+  num++ <span class="keyword">while</span> pos = <span class="number">1</span> + string.indexOf substr, pos
+  num</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Merge objects, returning a fresh copy with attributes from both sides.
+Used every time <code>Base#compile</code> is called, to allow properties in the
+options hash to propagate down the tree without polluting other branches.
+</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.<span class="function"><span class="title">merge</span></span> = (options, overrides) -&gt;
+  extend (extend {}, options), overrides</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>Extend a source object with the properties of another object (shallow copy).
+</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>extend = exports.<span class="function"><span class="title">extend</span></span> = (object, properties) -&gt;
+  <span class="keyword">for</span> key, val <span class="keyword">of</span> properties
+    object[key] = val
+  object</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Return a flattened version of an array.
+Handy for getting a list of <code>children</code> from the nodes.
+</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.flatten = <span class="function"><span class="title">flatten</span></span> = (array) -&gt;
+  flattened = []
+  <span class="keyword">for</span> element <span class="keyword">in</span> array
+    <span class="keyword">if</span> element <span class="keyword">instanceof</span> Array
+      flattened = flattened.concat flatten element
+    <span class="keyword">else</span>
+      flattened.push element
+  flattened</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Delete a key from an object, returning the value. Useful when a node is
+looking for a particular method in an options hash.
+</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.<span class="function"><span class="title">del</span></span> = (obj, key) -&gt;
+  val =  obj[key]
+  <span class="keyword">delete</span> obj[key]
+  val</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Gets the last item of an array(-like) object.
+</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.last = <span class="function"><span class="title">last</span></span> = (array, back) -&gt; array[array.length - (back <span class="keyword">or</span> <span class="number">0</span>) - <span class="number">1</span>]</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Typical Array::some
+</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.some = Array::some ? (fn) -&gt;
+  <span class="keyword">return</span> <span class="literal">true</span> <span class="keyword">for</span> e <span class="keyword">in</span> <span class="keyword">this</span> <span class="keyword">when</span> fn e
+  <span class="literal">false</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Simple function for inverting Literate CoffeeScript code by putting the
+documentation in comments, producing a string of CoffeeScript code that
+can be compiled &quot;normally&quot;.
+</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.<span class="function"><span class="title">invertLiterate</span></span> = (code) -&gt;
+  maybe_code = <span class="literal">true</span>
+  lines = <span class="keyword">for</span> line <span class="keyword">in</span> code.split(<span class="string">'\n'</span>)
+    <span class="keyword">if</span> maybe_code <span class="keyword">and</span> <span class="regexp">/^([ ]{4}|[ ]{0,3}\t)/</span>.test line
+      line
+    <span class="keyword">else</span> <span class="keyword">if</span> maybe_code = <span class="regexp">/^\s*$/</span>.test line
+      line
+    <span class="keyword">else</span>
+      <span class="string">'# '</span> + line
+  lines.join <span class="string">'\n'</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Merge two jison-style location data objects together.
+If <code>last</code> is not provided, this will simply return <code>first</code>.
+</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="function"><span class="title">buildLocationData</span></span> = (first, last) -&gt;
+  <span class="keyword">if</span> <span class="keyword">not</span> last
+    first
+  <span class="keyword">else</span>
+    first_line: first.first_line
+    first_column: first.first_column
+    last_line: last.last_line
+    last_column: last.last_column</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>This returns a function which takes an object as a parameter, and if that
+object is an AST node, updates that object&#39;s locationData.
+The object is returned either way.
+</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.<span class="function"><span class="title">addLocationDataFn</span></span> = (first, last) -&gt;
+    (obj) -&gt;
+      <span class="keyword">if</span> ((<span class="keyword">typeof</span> obj) <span class="keyword">is</span> <span class="string">'object'</span>) <span class="keyword">and</span> (!!obj[<span class="string">'updateLocationDataIfMissing'</span>])
+        obj.updateLocationDataIfMissing buildLocationData(first, last)
+
+      <span class="keyword">return</span> obj</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Convert jison location data to a string.
+<code>obj</code> can be a token, or a locationData.
+</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.<span class="function"><span class="title">locationDataToString</span></span> = (obj) -&gt;
+    <span class="keyword">if</span> (<span class="string">"2"</span> <span class="keyword">of</span> obj) <span class="keyword">and</span> (<span class="string">"first_line"</span> <span class="keyword">of</span> obj[<span class="number">2</span>]) <span class="keyword">then</span> locationData = obj[<span class="number">2</span>]
+    <span class="keyword">else</span> <span class="keyword">if</span> <span class="string">"first_line"</span> <span class="keyword">of</span> obj <span class="keyword">then</span> locationData = obj
+
+    <span class="keyword">if</span> locationData
+      <span class="string">"<span class="subst">#{locationData.first_line + <span class="number">1</span>}</span>:<span class="subst">#{locationData.first_column + <span class="number">1</span>}</span>-"</span> +
+      <span class="string">"<span class="subst">#{locationData.last_line + <span class="number">1</span>}</span>:<span class="subst">#{locationData.last_column + <span class="number">1</span>}</span>"</span>
+    <span class="keyword">else</span>
+      <span class="string">"No location data"</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>A <code>.coffee.md</code> compatible version of <code>basename</code>, that returns the file sans-extension.
+</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.<span class="function"><span class="title">baseFileName</span></span> = (file, stripExt = <span class="literal">no</span>, useWinPathSep = <span class="literal">no</span>) -&gt;
+  pathSep = <span class="keyword">if</span> useWinPathSep <span class="keyword">then</span> <span class="regexp">/\\|\// else /\//</span>
+  parts = file.split(pathSep)
+  file = parts[parts.length - <span class="number">1</span>]
+  <span class="keyword">return</span> file <span class="keyword">unless</span> stripExt
+  parts = file.split(<span class="string">'.'</span>)
+  parts.pop()
+  parts.pop() <span class="keyword">if</span> parts[parts.length - <span class="number">1</span>] <span class="keyword">is</span> <span class="string">'coffee'</span> <span class="keyword">and</span> parts.length &gt; <span class="number">1</span>
+  parts.join(<span class="string">'.'</span>)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Determine if a filename represents a CoffeeScript file.
+</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.<span class="function"><span class="title">isCoffee</span></span> = (file) -&gt; <span class="regexp">/\.((lit)?coffee|coffee\.md)$/</span>.test file</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Determine if a filename represents a Literate CoffeeScript file.
+</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.<span class="function"><span class="title">isLiterate</span></span> = (file) -&gt; <span class="regexp">/\.(litcoffee|coffee\.md)$/</span>.test file</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>Throws a SyntaxError with a source file location data attached to it in a
+property called <code>location</code>.
+</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.<span class="function"><span class="title">throwSyntaxError</span></span> = (message, location) -&gt;
+  location.last_line ?= location.first_line
+  location.last_column ?= location.first_column
+  error = <span class="keyword">new</span> SyntaxError message
+  error.location = location
+  <span class="keyword">throw</span> error</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Creates a nice error message like, following the &quot;standard&quot; format
+</p>
+<p><filename>:<line>:<col>: <message> plus the line with the error and a marker
+showing where the error is.
+</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>exports.<span class="function"><span class="title">prettyErrorMessage</span></span> = (error, fileName, code, useColors) -&gt;
+  <span class="keyword">return</span> error.stack <span class="keyword">or</span> <span class="string">"<span class="subst">#{error}</span>"</span> <span class="keyword">unless</span> error.location
+
+  {first_line, first_column, last_line, last_column} = error.location
+  codeLine = code.split(<span class="string">'\n'</span>)[first_line]
+  start    = first_column</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Show only the first line on multi-line errors.
+</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  end      = <span class="keyword">if</span> first_line <span class="keyword">is</span> last_line <span class="keyword">then</span> last_column + <span class="number">1</span> <span class="keyword">else</span> codeLine.length
+  marker   = repeat(<span class="string">' '</span>, start) + repeat(<span class="string">'^'</span>, end - start)
+
+  <span class="keyword">if</span> useColors
+    <span class="function"><span class="title">colorize</span></span>  = (str) -&gt; <span class="string">"\x1B[1;31m<span class="subst">#{str}</span>\x1B[0m"</span>
+    codeLine = codeLine[...start] + colorize(codeLine[start...end]) + codeLine[end..]
+    marker    = colorize marker
+
+  message = <span class="string">"""
+  <span class="subst">#{fileName}</span>:<span class="subst">#{first_line + <span class="number">1</span>}</span>:<span class="subst">#{first_column + <span class="number">1</span>}</span>: error: <span class="subst">#{error.message}</span>
+  <span class="subst">#{codeLine}</span>
+  <span class="subst">#{marker}</span>
+            """</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>Uncomment to add stacktrace.
+message += &quot;\n#{error.stack}&quot;
+</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>
+  message</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

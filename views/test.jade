@@ -1,0 +1,19 @@
+head
+	meta(charset='utf8')
+	meta(http-equiv='X-UA-Compatible', content='IE=edge, chrome=1')
+	meta(name='description', content='description of your site')
+	meta(name='author', content= "author of the site")
+
+	title= repo_name
+
+	style(type="text/css", media="screen").
+		#editor { 
+			height: 200px;
+			width: 100%;
+			position: relative;
+		}
+
+	//switch to google cdn when published
+	script(data-main="/js/test", src="/js/require.js")
+
+body

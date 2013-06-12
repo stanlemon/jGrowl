@@ -1,0 +1,78 @@
+opacity(opacity_dec)
+	-moz-opacity opacity_dec
+	filter unquote('alpha(opacity=' + round(opacity_dec*100) + ')')
+	opacity opacity_dec
+
+transition(time)
+	-webkit-transition all time ease-out // Saf3.2+, Chrome
+	-moz-transition all time ease-out // FF4+
+	-o-transition all time ease-out // Opera 10.5+
+	transition all time ease-out // WC3
+
+border_radius(radius)
+	-webkit-border-radius radius
+	-moz-border-radius radius
+	border-radius radius
+
+
+.thalam_container
+	z-index 1000
+	position relative
+	vertical-align bottom
+	width 100%
+	max-width 250px
+	color #fff
+	font-size 12px
+
+	h1
+		font-size 14px
+		margin 0
+		font-weight normal
+
+	.notification, .close_all
+		background-color #000
+		padding 10px
+		margin-top 5px
+		margin-bottom 5px
+		font-size 1em
+		text-align left
+		display none
+		opacity(.8)
+		border_radius(3px)
+
+	.notification
+		min-height 10px
+		min-width 175px
+		margin-left 10px
+		margin-right 10px
+
+		.header
+			font-weight bold
+			font-size .85em
+
+		.close
+			float right
+			font-weight bold
+			font-size 1em
+			cursor pointer
+
+	.close_all
+		margin-left 10px
+		margin-right 10px
+		padding-top 4px
+		padding-bottom 4px
+		cursor pointer
+		font-size .9em
+		font-weight bold
+		text-align center
+
+//themes
+.error
+	background-color #FF0000 !important
+.message
+	background-color #0048FF !important
+
+// hide thalam if page is printed
+@media print
+	.thalam_container
+		display none

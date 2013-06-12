@@ -1,0 +1,8 @@
+{
+  "name": "coffee-script",
+  "version": "1.6.3",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jashkenas/coffee-script.git"
+  }
+}
