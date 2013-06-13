@@ -1,0 +1,71 @@
+@import 'axis/animation'
+
+.thalam_container
+	margin-left 10px
+	margin-right 10px
+	max-width 250px
+	
+	z-index 1000
+	position relative
+	vertical-align bottom
+	font-size 12px
+	color white
+
+	p, button, h1
+		padding 0
+		margin 0
+
+	h1, button
+		font-size 14px
+
+	button
+		cursor pointer
+		background none
+		border none
+		color white
+
+	.close, h1
+		display inline-block
+
+	.notification, .close_all
+		padding 10px
+		background-color rgba(0, 0, 0, 0.8)
+		margin-top 5px
+		margin-bottom 5px
+		font-size 1em
+		border-radius 3px
+
+	.notification
+		animation: fadeInUp 1s
+		min-width 175px
+
+	.close
+		diameter = 13px
+
+		font-weight bold
+
+		font-size diameter
+		line-height diameter
+		height diameter
+		width diameter
+		border-radius (diameter/2)
+
+	.close_all
+		text-align center
+		//content '[close all]'
+		width 100%
+		
+		&.hide
+			display none
+
+	//themes
+	.notification
+		&.error
+			background-color #FF0000 !important
+		&.message
+			background-color #0048FF !important
+
+// hide thalam if page is printed
+@media print
+	.thalam_container
+		display none
