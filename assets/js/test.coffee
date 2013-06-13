@@ -21,8 +21,11 @@ require ['jquery', 'thalam'], ($, t) ->
 		message: 'meh'
 	])
 	Thalam.collection.add([
-		title: 'blah'
+		title: 'title'
+		message: 'meh eheheheh'
+	])
+	Thalam.collection.add([
+		title: 'ff'
 		message: 'meh'
 	])
-
 	return
