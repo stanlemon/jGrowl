@@ -18,8 +18,7 @@
       Notification.prototype.defaults = {
         title: "",
         message: "",
-        message_is_html: false,
-        classes: ['notification'],
+        classes: [],
         timeout: 0
       };
 
@@ -74,6 +73,8 @@
 
       NotificationView.prototype.tagName = 'div';
 
+      NotificationView.prototype.className = 'notification';
+
       NotificationView.prototype.events = {
         "click .close": function() {
           return this.model.destroy();
@@ -81,23 +82,22 @@
       };
 
       NotificationView.prototype.render = function() {
-        var message_tag;
-        this.className = this.model.get('classes').join(' ');
-        p('classes: ' + this.className);
-        message_tag = this.model.get('message_is_html') ? 'div' : 'p';
-        return this.el.innerHTML = "<button class=\"close\">&times;</button>\n<h1>" + (this.model.get('title')) + "</h1>\n<" + message_tag + " class=\"message\">\n	" + (this.model.get('message')) + "\n</" + message_tag + ">";
+        var msg, text, _ref2;
+        (_ref2 = this.el.classList).add.apply(_ref2, this.model.get('classes'));
+        this.el.innerHTML = "<button class=\"close\">&times;</button>\n<h1>" + (this.model.get('title')) + "</h1>";
+        if (typeof (msg = this.model.get('message')) === 'string') {
+          text = msg;
+          (msg = document.createElement('p')).appendChild(document.createTextNode(text));
+        }
+        return this.el.appendChild(msg);
       };
 
       NotificationView.prototype.initialize = function() {
-        var _this = this;
         _.bindAll(this);
         this.model.view = this;
         p('init NotificationView');
         this.model.bind('change:title change:message change:classes change:message_is_html', this.render);
-        this.render();
-        return setTimeout(function(notification_element) {
-          return notification_element.classList.add('open');
-        }, 20, this.el);
+        return this.render();
       };
 
       return NotificationView;
@@ -114,16 +114,18 @@
       Notifications.prototype.model = Notification;
 
       /**
-      		 * close all the notifications in the collection. triggered when close_all
+      		 * close all the notifications in the collection. triggered when _close_all
       	       button is clicked
+      	     * @private
       */
 
 
-      Notifications.prototype.close_all = function() {
-        p('Notifications close_all');
-        return this.each(function(notification) {
-          return notification.destroy();
+      Notifications.prototype._close_all = function() {
+        p('Notifications _close_all');
+        this.slice(0).forEach(function(notification) {
+          notification.destroy();
         });
+        p(this);
       };
 
       Notifications.prototype.initialize = function() {
@@ -147,15 +149,18 @@
 
       NotificationsView.prototype.events = {
         'click .close_all': function() {
-          return this.collection.close_all();
+          return this.collection._close_all();
         }
       };
 
       NotificationsView.prototype.render = function() {
         p('render NotificationsView');
-        return this.close_all_button.css({
-          display: this.collection.length > 1 ? 'block' : 'none'
-        });
+        p(this._close_all_button);
+        if (this.collection.length > 1) {
+          return this._close_all_button.classList.remove('hide');
+        } else {
+          return this._close_all_button.classList.add('hide');
+        }
       };
 
       /**
@@ -170,7 +175,7 @@
         notification_view = new NotificationView({
           model: notification
         });
-        return this.notification_container.append(notification_view.el);
+        return $(this.notification_container).append(notification_view.el);
       };
 
       NotificationsView.prototype.initialize = function() {
@@ -178,11 +183,11 @@
         this.collection.view = this;
         p('init NotificationsView');
         this.el.innerHTML = '<div class="notification_container"></div>\n<button class="close_all">close all</button>';
-        this.close_all_button = this.$el.find('.close_all');
-        this.notification_container = this.$el.find('.notification_container');
+        this._close_all_button = this.$el.find('.close_all')[0];
+        this.notification_container = this.$el.find('.notification_container')[0];
         this.render();
         this.collection.on({
-          'change:length': this.render,
+          'add remove': this.render,
           'add': this._add_notification
         });
       };

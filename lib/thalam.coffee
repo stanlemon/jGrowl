@@ -5,10 +5,9 @@ define ['jquery', 'underscore', 'backbone'], ($, _, BackBone) ->
 		defaults:
 			title: ""
 			message: ""
-			message_is_html: false
 
-			# list of classes (used for theming)
-			classes: ['notification']
+			# list of extra classes, used for themes
+			classes: []
 
 			# if timeout = 0 then it will not have a timeout (sticky)
 			# timeouts can be set and changed even after a notification is made
@@ -53,23 +52,28 @@ define ['jquery', 'underscore', 'backbone'], ($, _, BackBone) ->
 
 	class NotificationView extends Backbone.View
 		tagName: 'div'
+		className: 'notification'
 
 		events:
 			"click .close": -> @model.destroy()
 
 		render: ->
-			@className = @model.get('classes').join ' '
-			p 'classes: ' + @className
+			@el.classList.add(@model.get('classes')...)
 			
-			message_tag = if @model.get 'message_is_html' then 'div' else 'p'
-
 			@el.innerHTML = """
 				<button class="close">&times;</button>
 				<h1>#{@model.get 'title'}</h1>
-				<#{message_tag} class="message">
-					#{@model.get 'message'}
-				</#{message_tag}>
 			"""
+
+			# if it's a string, make it into a <p>, otherwise assume it's a
+			# DOM element
+			if typeof (msg = @model.get 'message') is 'string'
+				text = msg
+				(msg = document.createElement('p')).appendChild(
+					document.createTextNode(text)
+				)
+
+			@el.appendChild msg
 
 		initialize: ->
 			_.bindAll @
@@ -78,29 +82,26 @@ define ['jquery', 'underscore', 'backbone'], ($, _, BackBone) ->
 			@model.bind('change:title change:message change:classes change:message_is_html', @render)
 
 			@render()
-			
-			setTimeout(
-				(notification_element) =>
-					notification_element.classList.add('open') # used by css to trigger animation/transition
-				,
-				20,
-				@el,
-			)
 
 
 	class Notifications extends Backbone.Collection
 		model: Notification
 
 		###*
-		 * close all the notifications in the collection. triggered when close_all
+		 * close all the notifications in the collection. triggered when _close_all
 	       button is clicked
+	     * @private
 		###
-		close_all: ->
-			p 'Notifications close_all'
-			@each(
-				(notification) ->
-					notification.destroy()
-			)
+		_close_all: ->
+			p 'Notifications _close_all'
+			
+			# need to copy the array first, otherwise array indices get screwed up as the models are removed
+			@[...].forEach (notification) ->
+				notification.destroy()
+				return
+			p @
+			return
+
 
 		initialize: ->
 			_.bindAll @
@@ -111,14 +112,16 @@ define ['jquery', 'underscore', 'backbone'], ($, _, BackBone) ->
 		className: 'thalam_container'
 
 		events:
-			'click .close_all': -> @collection.close_all()
+			'click .close_all': -> @collection._close_all()
 
 		render: ->
 			p 'render NotificationsView'
+			p @_close_all_button
 			
-			@close_all_button.css(
-				display: if @collection.length > 1 then 'block' else 'none'
-			)
+			if @collection.length > 1
+				@_close_all_button.classList.remove('hide')
+			else
+				@_close_all_button.classList.add('hide')
 
 		###*
 		 * create a view for new notifications
@@ -127,7 +130,7 @@ define ['jquery', 'underscore', 'backbone'], ($, _, BackBone) ->
 		_add_notification: (notification) ->
 			p 'NotificationsView _add_notification'
 			notification_view = new NotificationView model: notification
-			@notification_container.append notification_view.el
+			$(@notification_container).append notification_view.el
 
 		initialize: ->
 			_.bindAll @
@@ -138,12 +141,13 @@ define ['jquery', 'underscore', 'backbone'], ($, _, BackBone) ->
 				<div class="notification_container"></div>
 				<button class="close_all">close all</button>
 			'''
-			@close_all_button = @$el.find('.close_all') 
-			@notification_container =  @$el.find('.notification_container') 
+
+			@_close_all_button = @$el.find('.close_all')[0]
+			@notification_container =  @$el.find('.notification_container')[0]
 			@render()
 
 			@collection.on(
-				'change:length': @render
+				'add remove': @render
 				'add': @_add_notification
 			)
 			return
