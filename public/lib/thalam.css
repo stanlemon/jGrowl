@@ -8207,6 +8207,7 @@
   margin-left: 10px;
   margin-right: 10px;
   max-width: 250px;
+  min-width: 175px;
   z-index: 1000;
   position: relative;
   vertical-align: bottom;
@@ -8252,7 +8253,6 @@
   -o-animation: fadeInUp 1s;
   -ms-animation: fadeInUp 1s;
   animation: fadeInUp 1s;
-  min-width: 175px;
 }
 .thalam_container .close {
   font-weight: bold;
