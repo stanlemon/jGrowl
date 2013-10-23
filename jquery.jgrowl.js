@@ -221,12 +221,12 @@
 				o.closeDuration = o.speed;
 			}
 
-            if (this.notifications.length === 0 && !this.interval) {
-                var self = this;
-                this.interval = setInterval(function () {
-                    self.element.data('jGrowl.instance').update();
-                }, parseInt(this.defaults.check, 10));
-            }
+			if (this.notifications.length === 0 && !this.interval) {
+				var self = this;
+				this.interval = setInterval(function () {
+					self.element.data('jGrowl.instance').update();
+				}, parseInt(this.defaults.check, 10));
+			}
 			this.notifications.push({ message: message , options: o });
 
 			o.log.apply( this.element , [this.element,message,o] );
@@ -294,10 +294,10 @@
 					} else {
 						$(this).remove();
 					}
-                    if (self.notifications.length === 0 && $('div.jGrowl-notification:parent', self.element).size() === 0) {
-                        clearInterval(self.interval);
-                        self.interval = undefined;
-                    }
+					if (self.notifications.length === 0 && $('div.jGrowl-notification:parent', self.element).size() === 0) {
+						clearInterval(self.interval);
+						self.interval = undefined;
+					}
 				});
 			}).trigger('jGrowl.beforeOpen');
 
@@ -321,25 +321,25 @@
 
 		/** Update the jGrowl Container, removing old jGrowl notifications **/
 		update:	 function() {
-            var $el = $(this.element);
-            $el.find('div.jGrowl-notification:parent').each(function () {
-                var $me = $(this);
-                if ($me.data("jGrowl") != undefined && $me.data("jGrowl").created !== undefined &&
-                    $me.data("jGrowl").sticky !== true &&
-                    ($me.data("jGrowl").created.getTime() + parseInt($me.data("jGrowl").life, 10)) < (new Date()).getTime() &&
-                    ($me.data("jGrowl.pause") == undefined || $me.data("jGrowl.pause") !== true)) {
+			var $el = $(this.element);
+			$el.find('div.jGrowl-notification:parent').each(function () {
+				var $me = $(this);
+				if ($me.data("jGrowl") != undefined && $me.data("jGrowl").created !== undefined &&
+					$me.data("jGrowl").sticky !== true &&
+					($me.data("jGrowl").created.getTime() + parseInt($me.data("jGrowl").life, 10)) < (new Date()).getTime() &&
+					($me.data("jGrowl.pause") == undefined || $me.data("jGrowl.pause") !== true)) {
 
 					// Pause the notification, lest during the course of animation another close event gets called.
-                    $me.trigger('jGrowl.beforeClose');
+					$me.trigger('jGrowl.beforeClose');
 				}
 			});
 
-            if (this.notifications.length > 0 && (this.defaults.pool == 0 || $el.find('div.jGrowl-notification:parent').size() < this.defaults.pool)) {
+			if (this.notifications.length > 0 && (this.defaults.pool == 0 || $el.find('div.jGrowl-notification:parent').size() < this.defaults.pool)) {
 				this.render( this.notifications.shift() );
-            }
+			}
 
-            if ($el.find('div.jGrowl-notification:parent').size() < 2) {
-                $el.find('div.jGrowl-closer').animate(this.defaults.animateClose, this.defaults.speed, this.defaults.easing, function () {
+			if ($el.find('div.jGrowl-notification:parent').size() < 2) {
+				$el.find('div.jGrowl-closer').animate(this.defaults.animateClose, this.defaults.speed, this.defaults.easing, function () {
 					$(this).remove();
 				});
 			}
@@ -361,7 +361,7 @@
 				.parent().empty()
 
 			clearInterval(this.interval);
-            this.interval = undefined;
+			this.interval = undefined;
 		},
 
 		close:	 function() {
