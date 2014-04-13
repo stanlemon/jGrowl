@@ -1,6 +1,10 @@
 {
   "name": "jGrowl",
   "version": "1.3.0",
+  "repository" : {
+    "type" : "git",
+    "url" : "http://github.com/stanlemon/jGrowl.git"
+  },
   "devDependencies": {
     "grunt": "~0.4.2",
     "grunt-contrib-jshint": "~0.6.3",
