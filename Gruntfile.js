@@ -14,6 +14,13 @@ module.exports = function(grunt) {
         }
       },
     },
+    cssmin: {
+      minify: {
+        expand: true,
+        src: 'jquery.jgrowl.css',
+        ext: '.jgrowl.min.css'
+      }
+    },
     jshint: {
       files: ['Gruntfile.js', 'jquery.jgrowl.js'],
       options: {
@@ -33,11 +40,12 @@ module.exports = function(grunt) {
   });
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
 
   grunt.registerTask('test', ['jshint']);
 
-  grunt.registerTask('default', ['jshint', 'uglify']);
+  grunt.registerTask('default', ['jshint', 'uglify', 'cssmin']);
 
 };
