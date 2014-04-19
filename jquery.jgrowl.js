@@ -1,11 +1,11 @@
 /**
- * jGrowl 1.2.13
+ * jGrowl 1.3.0
  *
  * Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
  * and GPL (http://www.opensource.org/licenses/gpl-license.php) licenses.
  *
  * Written by Stan Lemon <stosh1985@gmail.com>
- * Last updated: 2013.02.22
+ * Last updated: 2014.04.18
  *
  * jGrowl is a jQuery plugin implementing unobtrusive userland notifications.  These
  * notifications function similarly to the Growl Framework available for
@@ -13,6 +13,13 @@
  *
  * To Do:
  * - Move library settings to containers and allow them to be changed per container
+ *
+ * Changes in 1.3.0
+ * - Added non-vendor border-radius to stylesheet
+ * - Added grunt for generating minified js and css
+ * - Added npm package info
+ * - Added bower package info
+ * - Updates for jshint
  *
  * Changes in 1.2.13
  * - Fixed clearing interval when the container shuts down
