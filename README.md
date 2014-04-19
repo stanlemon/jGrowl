@@ -5,13 +5,16 @@ jGrowl is a jQuery plugin that raises unobtrusive messages within the browser, s
 jGrowl can be added to your project using package managers like bower and npm or directly into your html using cdnjs, as well as the good old fashioned copy-paste into your project directory.
 
 Use cdnjs:
+
 	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/jquery-jgrowl/1.2.12/jquery.jgrowl.min.js" />
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-jgrowl/1.2.12/jquery.jgrowl.min.js"></script>
 
 Install with bower
+
 	bower install https://github.com/stanlemon/jGrowl.git#master
 
 Install with 
+
 	npm install jgrowl
 
 ## Example usages
