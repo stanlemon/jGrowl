@@ -16,6 +16,7 @@
  *
  * Changes in 1.4.0
  * - Removed IE6 support
+ * - Added LESS support
  *
  * Changes in 1.3.0
  * - Added non-vendor border-radius to stylesheet
