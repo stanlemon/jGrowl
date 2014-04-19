@@ -134,11 +134,6 @@
  * - Namespaced all events
  */
 (function($) {
-	/** Compatibility holdover for 1.9 to check IE6 **/
-	var $ie6 = (function(){
-		return false === $.support.boxModel && $.support.objectAll && $.support.leadingWhitespace;
-	})();
-
 	/** jGrowl Wrapper - Establish a base jGrowl Container for compatibility with older releases. **/
 	$.jGrowl = function( m , o ) {
 		// To maintain compatibility with older version that only supported one instance we'll create the base container.
@@ -343,10 +338,6 @@
 			this.interval = setInterval( function() {
 				$(e).data('jGrowl.instance').update();
 			}, parseInt(this.defaults.check, 10));
-
-			if ($ie6) {
-				$(this.element).addClass('ie6');
-			}
 		},
 
 		/** Shutdown jGrowl, removing it and clearing the interval **/
