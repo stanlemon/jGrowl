@@ -1,18 +1,9 @@
 
-@width:					235px;
-@height:				40px;
-@backgroundColor: 		#000;
-@color: 				#fff;
-@fontSize: 				12px;
-@fontFamily: 			Tahoma, "Helvetica Neue", Helvetica, Arial, sans-serif;
-@opacity:				.85;
-
-
 .jGrowl {
 	z-index: 			9999;
-	color: 				@color;
-	font-size: 			@fontSize;
-	font-family:		@fontFamily;
+	color: 				@jgrowl-color;
+	font-size: 			@jgrowl-fontSize;
+	font-family:		@jgrowl-fontFamily;
 	position:			fixed;
 
 
@@ -49,13 +40,13 @@
 	}
 
 	.notification() {
-		background-color: 		@backgroundColor;
-		opacity: 				@opacity;
+		background-color: 		@jgrowl-backgroundColor;
+		opacity: 				@jgrowl-opacity;
 		// These are for older versions of Internet Explorer that don't support opacity
-		-ms-filter: 			progid:DXImageTransform.Microsoft.Alpha(Opacity=(@opacity*100)); 
-		filter: 				progid:DXImageTransform.Microsoft.Alpha(Opacity=(@opacity*100)); 
+		-ms-filter: 			progid:DXImageTransform.Microsoft.Alpha(Opacity=(@jgrowl-opacity*100));
+		filter: 				progid:DXImageTransform.Microsoft.Alpha(Opacity=(@jgrowl-opacity*100));
 		zoom: 					1;
-		width: 					@width;
+		width: 					@jgrowl-width;
 		padding: 				10px;
 		margin:					10px;
 		text-align: 			left;
@@ -65,7 +56,7 @@
 
 	.jGrowl-notification {
 		.notification;
-		min-height: 			@height;
+		min-height: 			@jgrowl-height;
 
 		.jGrowl-header {
 			font-weight: 			bold;
