@@ -16,7 +16,7 @@ module.exports = function(grunt) {
     less: {
       jgrowl: {
         files: {
-          "jquery.jgrowl.css": "jquery.jgrowl.less"
+          "jquery.jgrowl.css": "less/jgrowl.less"
         }
       }
     },
