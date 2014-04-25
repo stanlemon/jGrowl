@@ -2,7 +2,7 @@
   z-index: 9999;
   color: #ffffff;
   font-size: 12px;
-  font-family: Tahoma, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   position: fixed;
 }
 .jGrowl.top-left {
@@ -31,13 +31,13 @@
   margin-left: auto;
   margin-right: auto;
 }
-.jGrowl .jGrowl-notification {
+.jGrowl-notification {
   background-color: #000000;
-  opacity: 0.85;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(85);
-  filter: progid:DXImageTransform.Microsoft.Alpha(85);
+  opacity: 0.9;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(90);
+  filter: progid:DXImageTransform.Microsoft.Alpha(90);
   zoom: 1;
-  width: 235px;
+  width: 250px;
   padding: 10px;
   margin: 10px;
   text-align: left;
@@ -45,24 +45,27 @@
   border-radius: 5px;
   min-height: 40px;
 }
-.jGrowl .jGrowl-notification .jGrowl-header {
+.jGrowl-notification .jGrowl-header {
   font-weight: bold;
   font-size: .85em;
 }
-.jGrowl .jGrowl-notification .jGrowl-close {
+.jGrowl-notification .jGrowl-close {
+  background-color: transparent;
+  color: inherit;
+  border: none;
   z-index: 99;
   float: right;
   font-weight: bold;
   font-size: 1em;
   cursor: pointer;
 }
-.jGrowl .jGrowl-closer {
+.jGrowl-closer {
   background-color: #000000;
-  opacity: 0.85;
-  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(85);
-  filter: progid:DXImageTransform.Microsoft.Alpha(85);
+  opacity: 0.9;
+  -ms-filter: progid:DXImageTransform.Microsoft.Alpha(90);
+  filter: progid:DXImageTransform.Microsoft.Alpha(90);
   zoom: 1;
-  width: 235px;
+  width: 250px;
   padding: 10px;
   margin: 10px;
   text-align: left;
