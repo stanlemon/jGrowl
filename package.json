@@ -7,7 +7,7 @@
     "url" : "http://stanlemon.net"
   },
   "src": "jquery.jgrowl.js",
-  "style": "jquery.jgrowl.min.css",
+  "style": "jquery.jgrowl.css",
   "repository" : {
     "type" : "git",
     "url" : "http://github.com/stanlemon/jGrowl.git"
