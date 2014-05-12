@@ -6,6 +6,8 @@
     "email" : "stosh1985@gmail.com",
     "url" : "http://stanlemon.net"
   },
+  "src": "jquery.jgrowl.js",
+  "style": "jquery.jgrowl.css",
   "repository" : {
     "type" : "git",
     "url" : "http://github.com/stanlemon/jGrowl.git"
