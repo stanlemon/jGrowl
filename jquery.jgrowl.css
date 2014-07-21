@@ -121,6 +121,12 @@
 	text-align: 			center;
 }
 
+.jGrowl .ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
+	border: 1px solid #000;
+	background: #000;
+	color: #fff;
+}
+
 /** Hide jGrowl when printing **/
 @media print {
 	.jGrowl {
