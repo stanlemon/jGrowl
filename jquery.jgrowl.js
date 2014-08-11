@@ -199,6 +199,7 @@
 			open:				function() {},
 			beforeClose:		function() {},
 			close:				function() {},
+			onClick:			function() {},
 			animateOpen:		{
 				opacity:		'show'
 			},
@@ -245,6 +246,7 @@
 				.append($('<div/>').addClass('jGrowl-message').html(message))
 				.data("jGrowl", o).addClass(o.theme).children('div.jGrowl-close').bind("click.jGrowl", function() {
 					$(this).parent().trigger('jGrowl.beforeClose');
+					return false;
 				})
 				.parent();
 
@@ -279,6 +281,8 @@
 				}
 			}).bind('jGrowl.afterOpen', function() {
 				o.afterOpen.apply( notification , [notification,message,o,self.element] );
+			}).bind('click', function() {
+				o.onClick();
 			}).bind('jGrowl.beforeClose', function() {
 				if ( o.beforeClose.apply( notification , [notification,message,o,self.element] ) !== false )
 					$(this).trigger('jGrowl.close');
