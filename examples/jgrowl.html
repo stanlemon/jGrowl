@@ -169,6 +169,13 @@
 						return false;
 					}
 				});
+
+				$.jGrowl("This message is sticky and clickable", {
+					sticky: true,
+					onClick: function() {
+						alert("You clicked me!");
+					}
+				});
 				
 				$.jGrowl.defaults.closerTemplate = '<div>hide all notifications</div>';
 				
