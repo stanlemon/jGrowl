@@ -185,7 +185,6 @@
 			header:				'',
 			group:				'',
 			sticky:				false,
-			replace:  			false,
 			position:			'top-right',
 			glue:				'after',
 			theme:				'default',
@@ -205,7 +204,6 @@
 			open:				function() {},
 			beforeClose:		function() {},
 			close:				function() {},
-			click:				function() {},
 			animateOpen:		{
 				opacity:		'show'
 			},
@@ -252,7 +250,6 @@
 				.append($('<div/>').addClass('jGrowl-message').html(message))
 				.data("jGrowl", o).addClass(o.theme).children('.jGrowl-close').bind("click.jGrowl", function() {
 					$(this).parent().trigger('jGrowl.beforeClose');
-					return false;
 				})
 				.parent();
 
@@ -287,8 +284,6 @@
 				}
 			}).bind('jGrowl.afterOpen', function() {
 				o.afterOpen.apply( notification , [notification,message,o,self.element] );
-			}).bind('click', function() {
-				o.click.apply( notification, [notification.message,o,self.element] );
 			}).bind('jGrowl.beforeClose', function() {
 				if ( o.beforeClose.apply( notification , [notification,message,o,self.element] ) !== false )
 					$(this).trigger('jGrowl.close');
@@ -335,12 +330,6 @@
 					$(this).trigger('jGrowl.beforeClose');
 				}
 			});
-
-			if (this.notifications.length > 0 &&
-				 (this.defaults.pool == 0 || $(this.element).find('div.jGrowl-notification:parent').size() < this.defaults.pool))
-			if ( this.defaults.replace && (this.notifications.length > 1) &&
-				 ($(this.element).find('.jGrowl-notification:parent').size() === this.defaults.pool) )
-				$('.jGrowl-notification:last').remove();
 
 			if (this.notifications.length > 0 &&
 				(this.defaults.pool === 0 || $(this.element).find('.jGrowl-notification:parent').size() < this.defaults.pool) )
