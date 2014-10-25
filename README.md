@@ -6,35 +6,42 @@ jGrowl can be added to your project using package managers like bower and npm or
 
 Use cdnjs:
 
-	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/jquery-jgrowl/1.2.12/jquery.jgrowl.min.js" />
-	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-jgrowl/1.2.12/jquery.jgrowl.min.js"></script>
+```html
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/jquery-jgrowl/1.2.12/jquery.jgrowl.min.js" />
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-jgrowl/1.2.12/jquery.jgrowl.min.js"></script>
+```
 
 Install with bower
 
-	bower install https://github.com/stanlemon/jGrowl.git#master
+```
+bower install https://github.com/stanlemon/jGrowl.git#master
+```
 
 Install with 
 
-	npm install jgrowl
+```
+npm install jgrowl
+```
 
-## Example usages
-	// Sample 1
-	$.jGrowl("Hello world!");
-	// Sample 2
-	$.jGrowl("Stick this!", { sticky: true });
-	// Sample 3
-	$.jGrowl("A message with a header", { header: 'Important' });
-	// Sample 4
-	$.jGrowl("A message that will live a little longer.", { life: 10000 });
-	// Sample 5
-	$.jGrowl("A message with a beforeOpen callback and a different opening animation.", {
-		beforeClose: function(e,m) {
-			alert('About to close this notification!');
-		},
-		animateOpen: {
-			height: 'show'
-		}
-	});
+```js
+// Sample 1
+$.jGrowl("Hello world!");
+// Sample 2
+$.jGrowl("Stick this!", { sticky: true });
+// Sample 3
+$.jGrowl("A message with a header", { header: 'Important' });
+// Sample 4
+$.jGrowl("A message that will live a little longer.", { life: 10000 });
+// Sample 5
+$.jGrowl("A message with a beforeOpen callback and a different opening animation.", {
+	beforeClose: function(e,m) {
+		alert('About to close this notification!');
+	},
+	animateOpen: {
+		height: 'show'
+	}
+});
+```
 
 ## Configuration Options
 | Option           |  Default                             |  Description                                               |
