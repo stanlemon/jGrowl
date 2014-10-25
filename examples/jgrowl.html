@@ -143,6 +143,13 @@
 				$('#test1').jGrowl("This will be prepended before the last message.", { 
 					glue: 'before'
 				});
+
+				$.jGrowl("This message is sticky and clickable", {
+					sticky: true,
+					click: function(msg) {
+						alert("You clicked me");
+					}
+				});
 			});
 		})(jQuery);
 
