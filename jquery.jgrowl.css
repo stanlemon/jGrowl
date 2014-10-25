@@ -45,6 +45,13 @@
   border-radius: 5px;
   min-height: 40px;
 }
+.jGrowl-notification .ui-state-highlight,
+.jGrowl-notification .ui-widget-content .ui-state-highlight,
+.jGrowl-notification .ui-widget-header .ui-state-highlight {
+  border: 1px solid #000;
+  background: #000;
+  color: #fff;
+}
 .jGrowl-notification .jGrowl-header {
   font-weight: bold;
   font-size: .85em;
@@ -77,6 +84,13 @@
   font-size: .9em;
   font-weight: bold;
   text-align: center;
+}
+.jGrowl-closer .ui-state-highlight,
+.jGrowl-closer .ui-widget-content .ui-state-highlight,
+.jGrowl-closer .ui-widget-header .ui-state-highlight {
+  border: 1px solid #000;
+  background: #000;
+  color: #fff;
 }
 /** Hide jGrowl when printing **/
 @media print {
