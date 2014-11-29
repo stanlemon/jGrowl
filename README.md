@@ -7,8 +7,8 @@ jGrowl can be added to your project using package managers like bower and npm or
 Use cdnjs:
 
 ```html
-<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/jquery-jgrowl/1.2.12/jquery.jgrowl.min.js" />
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-jgrowl/1.2.12/jquery.jgrowl.min.js"></script>
+<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/jquery-jgrowl/1.3.0/jquery.jgrowl.min.js" />
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-jgrowl/1.3.0/jquery.jgrowl.min.js"></script>
 ```
 
 Install with bower
