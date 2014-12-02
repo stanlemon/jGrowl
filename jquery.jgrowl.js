@@ -278,7 +278,7 @@
 						if ($.support.opacity === false)
 							this.style.removeAttribute('filter');
 
-						if ( $(this).data("jGrowl") !== null ) // Happens when a notification is closing before it's open.
+						if ( $(this).data("jGrowl") !== null && typeof $(this).data("jGrowl") !== 'undefined') // Happens when a notification is closing before it's open.
 							$(this).data("jGrowl").created = new Date();
 
 						$(this).trigger('jGrowl.afterOpen');
