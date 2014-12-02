@@ -51,6 +51,7 @@ $.jGrowl("A message with a beforeOpen callback and a different opening animation
 | group            | empty                                | A css class to be applied to notifications when they are created, useful for 'grouping' notifications by a css selector. |
 | sticky           | false                                | When set to true a message will stick to the screen until it is intentionally closed by the user. |
 | position         | top-right                            | Designates a class which is applied to the jGrowl container and controls it's position on the screen. By Default there are five options available, top-left, top-right, bottom-left, bottom-right, center. This must be changed in the defaults before the startup method is called. |
+| appendTo         | body 	                              | The element where our jGrowl messages are appended to. The default is `body` but feel free to define another one. |
 | glue             | after                                | Designates whether a jGrowl notification should be appended to the container after all notifications, or whether it should be prepended to the container before all notifications. Options are after or before. |
 | theme            | default                              | A CSS class designating custom styling for this particular message, intended for use with jQuery UI. |
 | themeState       | highlight                            | A CSS class designating custom styling for this particular message and it's state, intended for use with jQuery UI. |
