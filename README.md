@@ -14,7 +14,7 @@ Use cdnjs:
 Install with bower
 
 ```
-bower install https://github.com/stanlemon/jGrowl.git#master
+bower install jgrowl
 ```
 
 Install with 
