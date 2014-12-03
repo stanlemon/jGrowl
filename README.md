@@ -17,7 +17,7 @@ Install with bower
 bower install jgrowl
 ```
 
-Install with 
+Install with npm
 
 ```
 npm install jgrowl
