@@ -359,7 +359,11 @@
 		startup: function(e) {
 			this.element = $(e).addClass('jGrowl').append('<div class="jGrowl-notification"></div>');
 			this.interval = setInterval( function() {
-				$(e).data('jGrowl.instance').update();
+				// some error in chage ^^
+				var instance = $(e).data('jGrowl.instance');
+		                if (undefined != instance) {
+		                    instance.update();
+		                }
 			}, parseInt(this.defaults.check, 10));
 		},
 
