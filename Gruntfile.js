@@ -11,7 +11,7 @@ module.exports = function(grunt) {
         files: {
           'jquery.jgrowl.min.js': ['jquery.jgrowl.js']
         }
-      },
+      }
     },
     less: {
       jgrowl: {
@@ -45,8 +45,8 @@ module.exports = function(grunt) {
         tasks: ['jshint', 'less', 'cssmin', 'uglify'],
         options: {
           spawn: false,
-        },
-      },
+        }
+      }
     }
   });
 
