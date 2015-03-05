@@ -361,9 +361,9 @@
 			this.interval = setInterval( function() {
 				// some error in chage ^^
 				var instance = $(e).data('jGrowl.instance');
-		                if (undefined != instance) {
-		                    instance.update();
-		                }
+				if (undefined !== instance) {
+					instance.update();
+				}
 			}, parseInt(this.defaults.check, 10));
 		},
 
