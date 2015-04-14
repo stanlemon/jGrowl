@@ -149,11 +149,13 @@
 	/** jGrowl Wrapper - Establish a base jGrowl Container for compatibility with older releases. **/
 	$.jGrowl = function( m , o ) {
 		// To maintain compatibility with older version that only supported one instance we'll create the base container.
-		if ( $('#jGrowl').length === 0 )
-			$('<div id="jGrowl"></div>').addClass( (o && o.position) ? o.position : $.jGrowl.defaults.position ).appendTo( (o && o.appendTo) ? o.appendTo : $.jGrowl.defaults.appendTo );
+		var appendTo = $((o && o.appendTo) ? o.appendTo : $.jGrowl.defaults.appendTo);
+		var jGrowl = $('#jGrowl',appendTo[0].ownerDocument);
+		if ( jGrowl.length === 0 )
+			jGrowl = $('<div id="jGrowl"></div>',appendTo[0].ownerDocument).addClass( (o && o.position) ? o.position : $.jGrowl.defaults.position ).appendTo( appendTo );
 
 		// Create a notification on the container.
-		$('#jGrowl').jGrowl(m,o);
+		jGrowl.jGrowl(m,o);
 	};
 
 
