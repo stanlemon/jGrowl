@@ -43,8 +43,8 @@
 	background-color: 		@jgrowl-backgroundColor;
 	opacity: 				@jgrowl-opacity;
 	// These are for older versions of Internet Explorer that don't support opacity
-	-ms-filter: 			~"progid:DXImageTransform.Microsoft.Alpha(Opacity=(@jgrowl-opacity*100))";
-	filter: 				~"progid:DXImageTransform.Microsoft.Alpha(Opacity=(@jgrowl-opacity*100))";
+	filter: e(%("progid:DXImageTransform.Microsoft.Alpha(Opacity=(%d*100))",@jgrowl-opacity));
+	-ms-filter: e(%("progid:DXImageTransform.Microsoft.Alpha(Opacity=(%d*100))",@jgrowl-opacity));
 	zoom: 					1;
 	width: 					@jgrowl-width;
 	padding: 				10px;
