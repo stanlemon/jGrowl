@@ -1,5 +1,5 @@
 /**
- * jGrowl 1.4.2
+ * jGrowl 1.4.3
  *
  * Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
  * and GPL (http://www.opensource.org/licenses/gpl-license.php) licenses.
@@ -13,6 +13,9 @@
  *
  * To Do:
  * - Move library settings to containers and allow them to be changed per container
+ *
+ * Changes in 1.4.3
+ * - Fixed opactiy in LESS for older version of IE
  *
  * Changes in 1.4.2
  * - Added word-break to less/css
