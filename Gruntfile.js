@@ -44,7 +44,7 @@ module.exports = function(grunt) {
         files: ['jquery.jgrowl.js', 'less/*'],
         tasks: ['jshint', 'less', 'cssmin', 'uglify'],
         options: {
-          spawn: false,
+          spawn: false
         }
       }
     }
