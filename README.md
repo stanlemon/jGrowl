@@ -70,5 +70,6 @@ $.jGrowl("A message with a beforeOpen callback and a different opening animation
 | open             | function(e,m,o) {}                   | Callback to be used when a new notification is opened. This callback receives the notification's DOM context, the notifications message and its option object. |
 | beforeClose      | function(e,m,o) {}                   | Callback to be used before a new notification is closed. This callback receives the notification's DOM context, the notifications message and its option object. |
 | close            | function(e,m,o) {}                   | Callback to be used when a new notification is closed. This callback receives the notification's DOM context, the notifications message and its option object. |
+| click            | function(e,m,o) {}                   | Callback to be used when a notification is clicked. This callback receives the notification's DOM context, the notifications message and its option object. |
 | animateOpen      | { opacity: 'show' }                  | The animation properties to use when opening a new notification (default to fadeOut). |
 | animateClose     | { opacity: 'hide' }                  | The animation properties to use when closing a new notification (defaults to fadeIn). |
