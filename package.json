@@ -1,23 +1,26 @@
 {
   "name": "jgrowl",
   "version": "1.4.5",
-  "author": { 
-    "name" : "Stan Lemon",
-    "email" : "stosh1985@gmail.com",
-    "url" : "http://stanlemon.net"
+  "author": {
+    "name": "Stan Lemon",
+    "email": "stosh1985@gmail.com",
+    "url": "http://stanlemon.net"
   },
   "src": "jquery.jgrowl.js",
   "style": "jquery.jgrowl.css",
-  "repository" : {
-    "type" : "git",
-    "url" : "http://github.com/stanlemon/jGrowl.git"
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/stanlemon/jGrowl.git"
   },
   "devDependencies": {
-    "grunt": "~0.4.2",
-    "grunt-contrib-jshint": "~0.6.3",
-    "grunt-contrib-uglify": "~0.4.0",
-    "grunt-contrib-cssmin": "~0.9.0",
-    "grunt-contrib-less": "~0.11.0",
-    "grunt-contrib-watch": "~0.6.1"
+    "grunt": "~1.0.1",
+    "grunt-contrib-cssmin": "~1.0.2",
+    "grunt-contrib-jshint": "~1.1.0",
+    "grunt-contrib-less": "~1.4.0",
+    "grunt-contrib-uglify": "~2.0.0",
+    "grunt-contrib-watch": "~1.0.0",
+    "grunt-mocha-test": "^0.13.2",
+    "mocha": "^3.2.0",
+    "should": "^11.1.2"
   }
 }
