@@ -6,7 +6,10 @@
     "Stan Lemon <stosh1985@gmail.com>"
   ],
   "description": "jGrowl is an unobtrusive notification system for web applications.",
-  "main": "jquery.jgrowl.js",
+  "main": [
+    "jquery.jgrowl.js",
+    "jquery.jgrowl.css"
+  ],
   "keywords": [
     "growl",
     "jgrowl",
