@@ -7,8 +7,9 @@
   ],
   "description": "jGrowl is an unobtrusive notification system for web applications.",
   "main": [
-    "jquery.jgrowl.js",
-    "jquery.jgrowl.css"
+    "jquery.jgrowl.min.css",
+    "jquery.jgrowl.map",
+    "jquery.jgrowl.min.js"
   ],
   "keywords": [
     "growl",
