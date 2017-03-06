@@ -214,6 +214,7 @@
 			openDuration:		'normal',
 			easing:				'swing',
 			closer:				true,
+			closerReversed:		0, 
 			closeTemplate:		'&times;',
 			closerTemplate:		'<div>[ close all ]</div>',
 			log:				function() {},
@@ -328,8 +329,13 @@
 			/** Add a Global Closer if more than one notification exists **/
 			if ($('.jGrowl-notification:parent', self.element).length > 1 &&
 				$('.jGrowl-closer', self.element).length === 0 && this.defaults.closer !== false ) {
-				$(this.defaults.closerTemplate).addClass('jGrowl-closer ' + this.defaults.themeState + ' ui-corner-all').addClass(this.defaults.theme)
-					.appendTo(self.element).animate(this.defaults.animateOpen, this.defaults.speed, this.defaults.easing)
+				$(this.defaults.closerTemplate).addClass('jGrowl-closer ' + this.defaults.themeState + ' ui-corner-all').addClass(this.defaults.theme);
+				if(o.closerReversed){
+					$(this.defaults.closerTemplate).prependTo(self.element);
+				} else {
+					$(this.defaults.closerTemplate).appendTo(self.element);
+				}
+				$(this.defaults.closerTemplate).animate(this.defaults.animateOpen, this.defaults.speed, this.defaults.easing)
 					.bind("click.jGrowl", function() {
 						$(this).siblings().trigger("jGrowl.beforeClose");
 
