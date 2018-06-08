@@ -154,7 +154,17 @@
  * - Removed dependency on metadata plugin in favor of .data()
  * - Namespaced all events
  */
-(function($) {
+
+(function (factory) {
+    if (typeof define === "function" && define.amd) {
+        define(["jquery"], factory);
+	}
+	else if(typeof module === "object" && module.exports) {  
+		module.exports = factory(require("postal"));
+	} else {
+        factory(jQuery);
+    }
+}(function( $, undefined ){
 	/** jGrowl Wrapper - Establish a base jGrowl Container for compatibility with older releases. **/
 	$.jGrowl = function( m , o ) {
 		// To maintain compatibility with older version that only supported one instance we'll create the base container.
@@ -395,5 +405,4 @@
 
 	/** Reference the Defaults Object for compatibility with older versions of jGrowl **/
 	$.jGrowl.defaults = $.fn.jGrowl.prototype.defaults;
-
-})(jQuery);
+}));
