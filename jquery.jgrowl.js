@@ -214,7 +214,7 @@
 			openDuration:		'normal',
 			easing:				'swing',
 			closer:				true,
-			closerReversed:		0, 
+			closerGlue:		0, 
 			closeTemplate:		'&times;',
 			closerTemplate:		'<div>[ close all ]</div>',
 			log:				function() {},
@@ -330,7 +330,7 @@
 			if ($('.jGrowl-notification:parent', self.element).length > 1 &&
 				$('.jGrowl-closer', self.element).length === 0 && this.defaults.closer !== false ) {
 				$(this.defaults.closerTemplate).addClass('jGrowl-closer ' + this.defaults.themeState + ' ui-corner-all').addClass(this.defaults.theme);
-				if(o.closerReversed){
+				if(o.closerGlue){
 					$(this.defaults.closerTemplate).prependTo(self.element);
 				} else {
 					$(this.defaults.closerTemplate).appendTo(self.element);
