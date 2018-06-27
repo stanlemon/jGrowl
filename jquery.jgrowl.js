@@ -154,6 +154,9 @@
  * - Removed dependency on metadata plugin in favor of .data()
  * - Namespaced all events
  */
+
+ // Support for UMD style
+// Based on UMDjs (https://github.com/umdjs/umd/blob/master/templates/jqueryPlugin.js)
 (function (factory) {
     if (typeof define === 'function' && define.amd) {
         define(['jquery'], factory);
