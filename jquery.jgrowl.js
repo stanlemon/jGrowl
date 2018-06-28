@@ -373,10 +373,10 @@
 				if (undefined !== instance) {
 					try {
 						instance.update();
-					} catch (e)
-						clearInterval(self.interval);
-                      				throw e;
-                    			}
+					} catch (e) {
+						instance.shutdown();
+						throw e;
+					}
 				}
 			}, parseInt(this.defaults.check, 10));
 		},
