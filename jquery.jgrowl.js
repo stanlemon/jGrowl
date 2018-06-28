@@ -394,19 +394,27 @@
 				// some error in chage ^^
 				var instance = $(e).data('jGrowl.instance');
 				if (undefined !== instance) {
-					instance.update();
+					try {
+						instance.update();
+					} catch (e) {
+						instance.shutdown();
+						throw e;
+					}
 				}
 			}, parseInt(this.defaults.check, 10));
 		},
 
 		/** Shutdown jGrowl, removing it and clearing the interval **/
 		shutdown: function() {
+		    try {
 			$(this.element).removeClass('jGrowl')
-				.find('.jGrowl-notification').trigger('jGrowl.close')
-				.parent().empty()
-			;
-
+			    .find('.jGrowl-notification').trigger('jGrowl.close')
+			    .parent().empty();
+		    } catch (e) {
+			throw e;
+		    } finally {
 			clearInterval(this.interval);
+		    }
 		},
 
 		close: function() {
