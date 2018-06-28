@@ -154,7 +154,30 @@
  * - Removed dependency on metadata plugin in favor of .data()
  * - Namespaced all events
  */
-(function($) {
+
+ // Support for UMD style
+// Based on UMDjs (https://github.com/umdjs/umd/blob/master/templates/jqueryPlugin.js)
+(function (factory) {
+    if (typeof define === 'function' && define.amd) {
+        define(['jquery'], factory);
+    } else if (typeof module === 'object' && module.exports) {
+        module.exports = function( root, jQuery ) {
+            if ( jQuery === undefined ) {
+                if ( typeof window !== 'undefined' ) {
+                    jQuery = require('jquery');
+                }
+                else {
+                    jQuery = require('jquery')(root);
+                }
+            }
+            factory(jQuery);
+            return jQuery;
+        };
+    } else {
+        factory(jQuery);
+    }
+}(function ($) {
+
 	/** jGrowl Wrapper - Establish a base jGrowl Container for compatibility with older releases. **/
 	$.jGrowl = function( m , o ) {
 		// To maintain compatibility with older version that only supported one instance we'll create the base container.
@@ -396,4 +419,4 @@
 	/** Reference the Defaults Object for compatibility with older versions of jGrowl **/
 	$.jGrowl.defaults = $.fn.jGrowl.prototype.defaults;
 
-})(jQuery);
+}));
