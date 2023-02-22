@@ -1,6 +1,6 @@
 {
   "name": "jgrowl",
-  "version": "1.4.8",
+  "version": "1.4.9",
   "author": {
     "name": "Stan Lemon",
     "email": "stosh1985@gmail.com",
@@ -17,14 +17,14 @@
     "build": "grunt"
   },
   "devDependencies": {
-    "grunt": "^1.4.1",
+    "grunt": "^1.6.1",
     "grunt-cli": "^1.4.3",
-    "grunt-contrib-cssmin": "~2.2.1",
-    "grunt-contrib-jshint": "~1.1.0",
-    "grunt-contrib-less": "~2.0.0",
-    "grunt-contrib-uglify": "~5.0.1",
+    "grunt-contrib-cssmin": "~4.0.0",
+    "grunt-contrib-jshint": "~3.2.0",
+    "grunt-contrib-less": "~3.0.0",
+    "grunt-contrib-uglify": "~5.2.2",
     "grunt-contrib-watch": "~1.1.0",
-    "jquery": "^3.6.0"
+    "jquery": "^3.6.3"
   },
   "peerDependencies": {
     "jquery": ">= 2.1.0 < 4.0.0"
