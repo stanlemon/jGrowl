@@ -11,7 +11,7 @@
   "style": "jquery.jgrowl.css",
   "repository": {
     "type": "git",
-    "url": "http://github.com/stanlemon/jGrowl.git"
+    "url": "git+ssh://git@github.com/stanlemon/jGrowl.git"
   },
   "scripts": {
     "build": "grunt"
