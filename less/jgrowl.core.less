@@ -30,7 +30,7 @@
 		top: 				0px;
 		width: 				50%;
 		left: 				25%;
-		
+
 		.jGrowl-notification,
 		.jGrowl-closer {
 			margin-left: 		auto;
@@ -43,8 +43,8 @@
 	background-color: 		@jgrowl-backgroundColor;
 	opacity: 				@jgrowl-opacity;
 	// These are for older versions of Internet Explorer that don't support opacity
-	filter: e(%("progid:DXImageTransform.Microsoft.Alpha(Opacity=(%d*100))",@jgrowl-opacity));
 	-ms-filter: e(%("progid:DXImageTransform.Microsoft.Alpha(Opacity=(%d*100))",@jgrowl-opacity));
+	filter: e(%("progid:DXImageTransform.Microsoft.Alpha(Opacity=(%d*100))", @jgrowl-opacity));
 	zoom: 					1;
 	width: 					@jgrowl-width;
 	padding: 				10px;
