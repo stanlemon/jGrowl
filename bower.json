@@ -1,6 +1,6 @@
 {
   "name": "jGrowl",
-  "version": "1.4.5",
+  "version": "1.6.0",
   "homepage": "https://github.com/stanlemon/jGrowl",
   "authors": [
     "Stan Lemon <stosh1985@gmail.com>"
@@ -20,7 +20,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "jquery": ">=1.4"
+    "jquery": ">=1.7.0 <5.0.0"
   },
   "ignore": [
     "**/.*",

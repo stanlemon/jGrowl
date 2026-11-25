@@ -68,6 +68,23 @@ $.jGrowl("A message with a beforeOpen callback and a different opening animation
 | animateOpen      | { opacity: 'show' }                  | The animation properties to use when opening a new notification (default to fadeOut). |
 | animateClose     | { opacity: 'hide' }                  | The animation properties to use when closing a new notification (defaults to fadeIn). |
 
+## Compatibility
+
+jGrowl 1.6.0 supports jQuery `>=1.7.0 <5.0.0`, including the existing 2.x and 3.x versions.
+Use the full jQuery build because jGrowl requires animation methods that slim builds omit.
+The Bower and jQuery plugin manifests now match the tested minimum, jQuery 1.7, which introduced `.on()`.
+Earlier manifests incorrectly claimed support for jQuery 1.4.
+
+For CommonJS without a global window, pass a DOM window to the installer:
+
+```js
+const $ = require('jgrowl')(window);
+$.jGrowl('Hello world!');
+```
+
+You can also pass an existing jQuery instance as the second argument: `require('jgrowl')(window, $)`.
+Load jQuery before jGrowl when you use browser script tags.
+
 ## Development
 
 Use Node.js 24 LTS and npm. Run `nvm use` if you use NVM.

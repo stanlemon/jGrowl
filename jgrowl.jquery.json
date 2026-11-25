@@ -11,7 +11,7 @@
     "notification",
     "message"
   ],
-  "version": "1.4.3",
+  "version": "1.6.0",
   "author": {
     "name": "Stan Lemon",
     "email": "stosh1985@gmail.com",
@@ -35,6 +35,6 @@
   "docs": "https://github.com/stanlemon/jGrowl",
   "download": "https://github.com/stanlemon/jGrowl/archive/master.zip",
   "dependencies": {
-    "jquery": ">=1.4"
+    "jquery": ">=1.7.0 <5.0.0"
   }
 }

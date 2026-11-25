@@ -1,11 +1,11 @@
 /**
- * jGrowl 1.4.5
+ * jGrowl 1.6.0
  *
  * Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
  * and GPL (http://www.opensource.org/licenses/gpl-license.php) licenses.
  *
  * Written by Stan Lemon <stosh1985@gmail.com>
- * Last updated: 2015.02.01
+ * Last updated: 2026.11.24
  *
  * jGrowl is a jQuery plugin implementing unobtrusive userland notifications.  These
  * notifications function similarly to the Growl Framework available for
@@ -13,6 +13,12 @@
  *
  * To Do:
  * - Move library settings to containers and allow them to be changed per container
+ *
+ * Changes in 1.6.0
+ * - Support jQuery 1.7 through 4.x, including the jQuery 4 CommonJS factory.
+ * - Add automated compatibility and browser tests.
+ * - Fix shutdown recovery and notifications closed during opening.
+ * - Replace Grunt while preserving the distributed artifacts.
  *
  * Changes in 1.4.5
  * - Fixed arguement list for click callback, thanks @timotheeg
