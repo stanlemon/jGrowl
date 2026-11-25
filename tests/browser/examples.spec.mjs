@@ -58,6 +58,9 @@ test.describe('demo pages', () => {
 
   test('appends notifications to the demo navigation and preserves its sticky message', async ({ page }) => {
     await page.goto('https://jgrowl.test/examples/appendTo.html');
+    const heading = await page.getByRole('heading', { name: 'Append To Another DOM-Object' }).boundingBox();
+    const navigation = await page.locator('#dummyNav').boundingBox();
+    expect(heading.y).toBeGreaterThanOrEqual(navigation.y + navigation.height);
     const messages = page.locator('#dummyNav > #jGrowl .jGrowl-message');
     await expect(messages).toHaveText(['This message is sticky and clickable', ...Array(6).fill('This message expires automatically.')]);
     await expect(page.locator('#dummyNav .jGrowl-closer')).toHaveText('[ xxxxx ]');
