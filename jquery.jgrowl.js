@@ -227,7 +227,8 @@
 				}
 
 				/** Optionally call jGrowl instance methods, or just raise a normal notification **/
-				if ( typeof $(this).data('jGrowl.instance')[m] === 'function' ) {
+					if ( m !== 'constructor' && Object.prototype.hasOwnProperty.call($.fn.jGrowl.prototype, m) &&
+						typeof $(this).data('jGrowl.instance')[m] === 'function' ) {
 					$(this).data('jGrowl.instance')[m].apply( $(this).data('jGrowl.instance') , $.makeArray(args).slice(1) );
 				} else {
 					$(this).data('jGrowl.instance').create( m , o );

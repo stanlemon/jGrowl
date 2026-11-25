@@ -88,6 +88,12 @@ describe.each(jquerySources)('jGrowl with jQuery $name', ({ source }) => {
     expect($('#target > #jGrowl.center')).toHaveLength(1);
   });
 
+  it.each(['toString', 'constructor', 'hasOwnProperty', 'valueOf', 'isPrototypeOf', 'propertyIsEnumerable', 'toLocaleString', '__defineGetter__', '__defineSetter__', '__lookupGetter__', '__lookupSetter__', 'defaults', 'notifications', 'element', 'interval'])('renders the message %s when it is not a jGrowl command', (message) => {
+    $.jGrowl(message);
+    update();
+    expect(messages()).toEqual([message]);
+  });
+
   it('supports object shorthand and preserves jQuery chaining', () => {
     const container = $('<div id="custom"></div>').appendTo('body');
     expect(container.jGrowl({ message: 'Shorthand', header: 'Title' })).toBe(container);
