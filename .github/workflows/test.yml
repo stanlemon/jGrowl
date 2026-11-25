@@ -1,0 +1,32 @@
+name: Test
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - run: git diff --exit-code -- jquery.jgrowl.min.js jquery.jgrowl.map jquery.jgrowl.css jquery.jgrowl.min.css
+      - run: npx playwright install --with-deps chromium firefox webkit
+      - run: npm run test:browser
+      - run: npm audit --audit-level=low
+      - run: npm pack --dry-run
+      - uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: browser-results
+          path: test-results/
+          if-no-files-found: ignore

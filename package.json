@@ -14,18 +14,34 @@
     "url": "git+ssh://git@github.com/stanlemon/jGrowl.git"
   },
   "scripts": {
-    "build": "grunt"
+    "build": "node scripts/build.mjs",
+    "test:prepare": "node scripts/prepare-tests.mjs",
+    "pretest": "npm run test:prepare",
+    "test": "vitest run --coverage",
+    "test:browser": "npm run test:prepare && playwright test",
+    "test:all": "npm test && npm run build && npm run test:browser"
   },
   "devDependencies": {
-    "grunt": "^1.6.1",
-    "grunt-cli": "^1.5.0",
-    "grunt-contrib-jshint": "~3.2.0",
-    "grunt-contrib-less": "~3.0.0",
-    "grunt-contrib-uglify": "~5.2.2",
-    "grunt-contrib-watch": "~1.1.0",
-    "jquery": "^3.7.1"
+    "@playwright/test": "^1.65.1",
+    "@vitest/coverage-v8": "^5.1.1",
+    "clean-css": "^5.3.3",
+    "jquery": "^4.1.0",
+    "jsdom": "^31.0.1",
+    "less": "^4.9.1",
+    "terser": "^5.51.4",
+    "vitest": "^5.1.1"
   },
   "peerDependencies": {
     "jquery": ">= 2.1.0 < 4.0.0"
-  }
+  },
+  "files": [
+    "jquery.jgrowl.js",
+    "jquery.jgrowl.min.js",
+    "jquery.jgrowl.map",
+    "jquery.jgrowl.css",
+    "jquery.jgrowl.min.css",
+    "less/",
+    "bower.json",
+    "jgrowl.jquery.json"
+  ]
 }

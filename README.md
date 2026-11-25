@@ -67,3 +67,37 @@ $.jGrowl("A message with a beforeOpen callback and a different opening animation
 | click            | function(e,m,o) {}                   | Callback to be used when a notification is clicked. This callback receives the notification's DOM context, the notification's message and its option object. |
 | animateOpen      | { opacity: 'show' }                  | The animation properties to use when opening a new notification (default to fadeOut). |
 | animateClose     | { opacity: 'hide' }                  | The animation properties to use when closing a new notification (defaults to fadeIn). |
+
+## Development
+
+Use Node.js 24 LTS and npm. Run `nvm use` if you use NVM.
+
+```sh
+npm ci
+npm test
+npm run build
+npx playwright install chromium firefox webkit
+npm run test:browser
+```
+
+Vitest tests the demo behaviors, lifecycle callbacks, notification queues, hover pauses, and recovery after shutdown.
+Playwright tests real animations and clicks in Chromium, Firefox, and WebKit.
+Both suites cover jQuery 1.7.0, 1.12.4, 2.1.0, 2.2.4, 3.0.0, 3.7.1, 3.8.0, 4.0.0, and 4.1.0.
+Browser tests cover the original and minified JavaScript and CSS.
+The tests use isolated browser windows and real jQuery objects.
+
+The first test run downloads pinned jQuery fixtures from code.jquery.com and compares their SHA-256 hashes.
+Later runs use `.cache/jquery` and work without network access.
+Historical jQuery fixtures stay outside the dependency graph and the published package.
+
+`npm run build` replaces Grunt and writes the same four generated artifacts:
+
+- `jquery.jgrowl.min.js`
+- `jquery.jgrowl.map`
+- `jquery.jgrowl.css`
+- `jquery.jgrowl.min.css`
+
+The source file `jquery.jgrowl.js` remains the CommonJS entry point and the browser plugin.
+The build preserves ES5 syntax and legacy CSS filters.
+Use `npm run test:all` to run both suites and rebuild the artifacts.
+GitHub Actions also audits dependencies and rejects stale generated artifacts.
