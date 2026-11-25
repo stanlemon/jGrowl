@@ -94,6 +94,27 @@ describe.each(jquerySources)('jGrowl with jQuery $name', ({ source }) => {
     expect(messages()).toEqual([message]);
   });
 
+  it.each(['custom', 'toString'])('runs an own instance command named %s only in its container', (command) => {
+    $('body').append('<div id="one"></div><div id="two"></div>');
+    $('#one, #two').jGrowl('update');
+    const instance = $('#one').data('jGrowl.instance');
+    instance[command] = function (message, options) {
+      expect(this).toBe(instance);
+      this.create(message, options);
+    };
+
+    const container = $('#one');
+    expect(container.jGrowl(command, 'Custom message', { header: 'Custom header' })).toBe(container);
+    $('#two').jGrowl(command);
+    update('#one');
+    update('#two');
+
+    expect(messages('#one')).toEqual(['Custom message']);
+    expect($('#one .jGrowl-header').text()).toBe('Custom header');
+    expect(messages('#two')).toEqual([command]);
+    expect(Object.prototype.hasOwnProperty.call($('#two').data('jGrowl.instance'), command)).toBe(false);
+  });
+
   it('supports object shorthand and preserves jQuery chaining', () => {
     const container = $('<div id="custom"></div>').appendTo('body');
     expect(container.jGrowl({ message: 'Shorthand', header: 'Title' })).toBe(container);
