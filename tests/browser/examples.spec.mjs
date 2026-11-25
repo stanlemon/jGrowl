@@ -83,6 +83,14 @@ test.describe('demo pages', () => {
     await expect(toggle).toHaveAttribute('aria-expanded', 'true');
     await expect(page.getByRole('link', { name: 'About', exact: true })).toBeVisible();
     await expect(page.locator('#navbar-navigation')).toHaveClass(/\bshow\b/);
+    const about = page.getByRole('link', { name: 'About', exact: true });
+    expect(await about.evaluate((element) => {
+      const bounds = element.getBoundingClientRect();
+      const hit = document.elementFromPoint(bounds.left + bounds.width / 2, bounds.top + bounds.height / 2);
+      return element.contains(hit);
+    })).toBe(true);
+    await about.click();
+    await expect(page).toHaveURL(/#about$/);
     await toggle.click();
     await expect(toggle).toHaveAttribute('aria-expanded', 'false');
     await expect(page.getByRole('link', { name: 'About', exact: true })).toBeHidden();
