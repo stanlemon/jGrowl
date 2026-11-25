@@ -311,6 +311,10 @@
 			var self = this;
 			var message = n.message;
 			var o = n.options;
+			// User callbacks can shut down this instance and replace its container.
+			function ownsContainer() {
+				return $(self.element).data('jGrowl.instance') === self;
+			}
 
 			// Support for jQuery theme-states, if this is not used it displays a widget header
 			o.themeState = (o.themeState === '') ? '' : 'ui-state-' + o.themeState;
@@ -334,11 +338,13 @@
 				if ( $(self.element).data('jGrowl.hover') === this )
 					$(self.element).data("jGrowl.pause", false).removeData('jGrowl.hover');
 			}).on('jGrowl.beforeOpen', function() {
-				if ( o.beforeOpen.apply( notification , [notification,message,o,self.element] ) !== false ) {
+				if ( ownsContainer() &&
+					o.beforeOpen.apply( notification , [notification,message,o,self.element] ) !== false && ownsContainer() ) {
 					$(this).trigger('jGrowl.open');
 				}
 			}).on('jGrowl.open', function() {
-				if ( o.open.apply( notification , [notification,message,o,self.element] ) !== false &&
+				if ( ownsContainer() &&
+					o.open.apply( notification , [notification,message,o,self.element] ) !== false && ownsContainer() &&
 					$(this).data('jGrowl') !== undefined ) {
 					if ( o.glue == 'after' ) {
 						$('.jGrowl-notification', self.element).last().after(notification);
@@ -347,6 +353,10 @@
 					}
 
 					$(this).animate(o.animateOpen, o.openDuration, o.easing, function() {
+						if ( !ownsContainer() ) {
+							$(this).remove();
+							return;
+						}
 						// Fixes some anti-aliasing issues with IE filters.
 						if ($.support && $.support.opacity === false)
 							this.style.removeAttribute('filter');
@@ -358,7 +368,8 @@
 					});
 				}
 			}).on('jGrowl.afterOpen', function() {
-				o.afterOpen.apply( notification , [notification,message,o,self.element] );
+				if ( ownsContainer() )
+					o.afterOpen.apply( notification , [notification,message,o,self.element] );
 			}).on('click', function() {
 				o.click.apply( notification, [notification,message,o,self.element] );
 			}).on('jGrowl.beforeClose', function() {
@@ -381,11 +392,16 @@
 				});
 			}).trigger('jGrowl.beforeOpen');
 
+			if ( !ownsContainer() ) {
+				notification.remove();
+				return;
+			}
+
 			/** Optional Corners Plugin **/
 			if ( o.corners !== '' && $.fn.corner !== undefined ) $(notification).corner( o.corners );
 
 			/** Add a Global Closer if more than one notification exists **/
-			if ($('.jGrowl-notification:parent', self.element).length > 1 &&
+			if (ownsContainer() && $('.jGrowl-notification:parent', self.element).length > 1 &&
 				$('.jGrowl-closer', self.element).length === 0 && this.defaults.closer !== false ) {
 				$(this.defaults.closerTemplate).addClass('jGrowl-closer ' + this.defaults.themeState + ' ui-corner-all').addClass(this.defaults.theme)
 					.appendTo(self.element).animate(this.defaults.animateOpen, this.defaults.speed, this.defaults.easing)
@@ -453,13 +469,15 @@
 		/** Shutdown jGrowl, removing it and clearing the interval **/
 		shutdown: function() {
 		    try {
-			$(this.element).removeClass('jGrowl')
-			    .find('.jGrowl-notification:parent').trigger('jGrowl.close');
+			if ( $(this.element).data('jGrowl.instance') === this )
+				$(this.element).removeClass('jGrowl')
+				    .find('.jGrowl-notification:parent').trigger('jGrowl.close');
 		    } finally {
 			clearInterval(this.interval);
 			this.interval = null;
 			this.notifications = [];
-			$(this.element).empty().removeData('jGrowl.instance').removeData('jGrowl.pause').removeData('jGrowl.hover');
+			if ( $(this.element).data('jGrowl.instance') === this )
+				$(this.element).empty().removeData('jGrowl.instance').removeData('jGrowl.pause').removeData('jGrowl.hover');
 		    }
 		},
 

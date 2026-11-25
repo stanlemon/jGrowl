@@ -640,6 +640,136 @@ describe.each(jquerySources)('jGrowl with jQuery $name', ({ source }) => {
     expect($('#jGrowl').hasClass('jGrowl')).toBe(true);
   });
 
+  it.each(['beforeOpen', 'open'])('keeps only the replacement when %s restarts its container', (hook) => {
+    const callbacks = [];
+    const cornerMessages = [];
+    let retired;
+    let replacement;
+    let oldNotification;
+    $.fn.corner = function () {
+      cornerMessages.push(this.find('.jGrowl-message').text());
+      return this.addClass('corners-applied');
+    };
+    const options = {
+      beforeOpen: function () { callbacks.push('beforeOpen'); },
+      open: function () { callbacks.push('open'); },
+      afterOpen: function () { callbacks.push('afterOpen'); },
+    };
+    options[hook] = function (notification, message, config, container) {
+      callbacks.push(hook);
+      oldNotification = notification;
+      retired = container.data('jGrowl.instance');
+      container.jGrowl('shutdown');
+      container.jGrowl('New', { sticky: true });
+      replacement = container.data('jGrowl.instance');
+      notification.trigger('jGrowl.beforeOpen').trigger('jGrowl.open').trigger('jGrowl.afterOpen');
+    };
+    $.jGrowl('Old', options);
+    update();
+    const expectedCallbacks = hook === 'beforeOpen' ? ['beforeOpen'] : ['beforeOpen', 'open'];
+    expect(callbacks).toEqual(expectedCallbacks);
+    expect(messages()).toEqual([]);
+    expect(cornerMessages).toEqual([]);
+    expect($('#jGrowl').hasClass('jGrowl')).toBe(true);
+    expect($('#jGrowl').data('jGrowl.instance')).toBe(replacement);
+    expect(replacement.interval).not.toBeNull();
+    expect(replacement.notifications.map((pending) => pending.message)).toEqual(['New']);
+    expect(retired.interval).toBeNull();
+    expect(retired.notifications).toEqual([]);
+    expect($.hasData(oldNotification[0])).toBe(false);
+    expect(oldNotification[0].isConnected).toBe(false);
+    expect(callbacks).toEqual(expectedCallbacks);
+    vi.advanceTimersByTime($.jGrowl.defaults.check);
+    expect(messages()).toEqual(['New']);
+    expect(cornerMessages).toEqual(['New']);
+    expect(replacement.notifications).toEqual([]);
+  });
+
+  it('preserves a replacement created during shutdown and ignores later retired shutdown calls', () => {
+    let replacement;
+    let oldClosed = 0;
+    let replacementClosed = 0;
+    $.jGrowl('Old', {
+      close: function (notification, message, config, container) {
+        oldClosed += 1;
+        container.jGrowl('shutdown');
+        container.jGrowl('Replacement', { sticky: true, close: function () { replacementClosed += 1; } });
+        replacement = container.data('jGrowl.instance');
+      },
+    });
+    update();
+    const retired = $('#jGrowl').data('jGrowl.instance');
+    $('#jGrowl').jGrowl('shutdown');
+    const replacementTimer = replacement.interval;
+    expect(oldClosed).toBe(1);
+    expect($('#jGrowl').data('jGrowl.instance')).toBe(replacement);
+    expect($('#jGrowl').hasClass('jGrowl')).toBe(true);
+    expect(replacementTimer).not.toBeNull();
+    expect(replacement.notifications.map((pending) => pending.message)).toEqual(['Replacement']);
+    retired.create('Stale pending message');
+    retired.shutdown();
+    retired.shutdown();
+    expect(retired.interval).toBeNull();
+    expect(retired.notifications).toEqual([]);
+    expect(replacement.notifications.map((pending) => pending.message)).toEqual(['Replacement']);
+    vi.advanceTimersByTime($.jGrowl.defaults.check);
+    expect(messages()).toEqual(['Replacement']);
+    retired.shutdown();
+    expect(messages()).toEqual(['Replacement']);
+    expect($('#jGrowl').hasClass('jGrowl')).toBe(true);
+    expect($('#jGrowl').data('jGrowl.instance')).toBe(replacement);
+    expect(replacement.interval).toBe(replacementTimer);
+    expect(replacementClosed).toBe(0);
+    expect(oldClosed).toBe(1);
+  });
+
+  it.each(['detached', 'attached'])('cleans a retired %s notification when its opening animation completes', (placement) => {
+    $.fx.off = false;
+    let notification;
+    let afterOpen = 0;
+    $.jGrowl('Old', {
+      openDuration: 100, animateOpen: { opacity: 1 },
+      beforeOpen: function (element) { notification = element; },
+      afterOpen: function () { afterOpen += 1; },
+    });
+    update();
+    if (placement === 'detached') {
+      notification.detach();
+      $('#jGrowl').jGrowl('shutdown');
+    } else {
+      $('#jGrowl').removeData('jGrowl.instance');
+    }
+    $.jGrowl('Replacement', { sticky: true, openDuration: 0 });
+    update();
+    vi.advanceTimersByTime(200);
+    expect(messages()).toEqual(['Replacement']);
+    expect(afterOpen).toBe(0);
+    expect(notification.data('jGrowl')).toBeUndefined();
+    expect($.hasData(notification[0])).toBe(false);
+    expect(notification[0].isConnected).toBe(false);
+  });
+
+  it('does not add a retired instance closer after its corners plugin replaces the container', () => {
+    let replacement;
+    $.fn.corner = function () {
+      if (this.find('.jGrowl-message').text() === 'Old') {
+        $('#jGrowl').jGrowl('shutdown');
+        $.jGrowl('New one', { sticky: true });
+        replacement = $('#jGrowl').data('jGrowl.instance');
+        replacement.defaults = $.extend({}, $.jGrowl.defaults, { closer: false });
+        $.jGrowl('New two', { sticky: true });
+        update('#jGrowl', 2);
+      }
+      return this.addClass('corners-applied');
+    };
+    $.jGrowl('Old');
+    update();
+    expect(messages()).toEqual(['New one', 'New two']);
+    expect($('#jGrowl').data('jGrowl.instance')).toBe(replacement);
+    expect($('.jGrowl-closer')).toHaveLength(0);
+    expect(notifications().filter('.corners-applied')).toHaveLength(2);
+  });
+
   it('stops the interval after its container is removed', () => {
     $.jGrowl('Removed');
     const instance = $('#jGrowl').data('jGrowl.instance');

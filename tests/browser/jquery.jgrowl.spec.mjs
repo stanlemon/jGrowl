@@ -76,6 +76,34 @@ for (const { version } of jqueryVersions) {
         await expect(anchor).toBeVisible();
       });
 
+      test('preserves replacement instances created by lifecycle callbacks', async ({ page }) => {
+        for (const hook of ['beforeOpen', 'open']) {
+          await page.evaluate((hook) => {
+            if (jQuery('#jGrowl').length) jQuery('#jGrowl').jGrowl('shutdown');
+            const options = { sticky: true, openDuration: 0, closeDuration: 0 };
+            options[hook] = function (notification, message, options, container) {
+              container.jGrowl('shutdown');
+              container.jGrowl('Replacement from ' + hook, { sticky: true, openDuration: 0, closeDuration: 0 });
+            };
+            jQuery.jGrowl('Retired message', options);
+          }, hook);
+          await expect(page.locator('.jGrowl-message')).toHaveText(['Replacement from ' + hook]);
+        }
+        await page.evaluate(() => {
+          jQuery('#jGrowl').jGrowl('shutdown');
+          jQuery.jGrowl('Close callback owner', {
+            sticky: true, openDuration: 0, closeDuration: 0,
+            close: function (notification, message, options, container) {
+              container.jGrowl('shutdown');
+              container.jGrowl('Replacement from close', { sticky: true, openDuration: 0, closeDuration: 0 });
+            },
+          });
+        });
+        await expect(page.locator('.jGrowl-message')).toHaveText(['Close callback owner']);
+        await page.evaluate(() => jQuery('#jGrowl').jGrowl('shutdown'));
+        await expect(page.locator('.jGrowl-message')).toHaveText(['Replacement from close']);
+      });
+
       test('supports nested placement, Bootstrap groups, close all, and restart', async ({ page }) => {
         await page.evaluate(() => {
           jQuery.jGrowl.defaults.appendTo = '#host';
