@@ -103,6 +103,14 @@ describe.each(jquerySources)('jGrowl with jQuery $name', ({ source }) => {
     expect($('.jGrowl-header').text()).toBe('Title');
   });
 
+  it('uses placement options from global object shorthand', () => {
+    $('body').append('<section id="host"></section>');
+    $.jGrowl({ message: 'Nested shorthand', appendTo: '#host', position: 'bottom-left' });
+    update();
+    expect($('#host > #jGrowl.bottom-left')).toHaveLength(1);
+    expect(messages()).toEqual(['Nested shorthand']);
+  });
+
   it('keeps queues and notification options independent between containers', () => {
     $('body').append('<div id="one"></div><div id="two"></div>');
     $('#one').jGrowl('First', { theme: 'manilla', sticky: true });
