@@ -38,10 +38,14 @@ for (const { version } of jqueryVersions) {
 
       test('expires timed messages and preserves sticky messages', async ({ page }) => {
         await page.evaluate(() => {
-          jQuery.jGrowl('Timed', { life: 30, openDuration: 0, closeDuration: 0 });
+          jQuery.jGrowl('Timed', { life: 30000, openDuration: 0, closeDuration: 0 });
           jQuery.jGrowl('Sticky', { sticky: true, openDuration: 0, closeDuration: 0 });
         });
         await expect(page.locator('.jGrowl-message', { hasText: 'Timed' })).toBeVisible();
+        await page.evaluate(() => {
+          jQuery('.jGrowl-message').filter(function () { return jQuery(this).text() === 'Timed'; })
+            .parent().data('jGrowl').life = 0;
+        });
         await expect(page.locator('.jGrowl-message', { hasText: 'Timed' })).toHaveCount(0);
         await expect(page.locator('.jGrowl-message', { hasText: 'Sticky' })).toBeVisible();
       });

@@ -103,8 +103,9 @@ Both suites cover jQuery 1.7.0, 1.12.4, 2.1.0, 2.2.4, 3.0.0, 3.7.1, 3.8.0, 4.0.0
 Browser tests cover the original and minified JavaScript and CSS.
 The tests use isolated browser windows and real jQuery objects.
 
-The first test run downloads pinned jQuery fixtures from code.jquery.com and compares their SHA-256 hashes.
-Later runs use `.cache/jquery` and work without network access.
+The first test run downloads pinned jQuery fixtures from code.jquery.com and Bootstrap demo assets from jsDelivr.
+It compares their SHA-256 hashes before use.
+Later runs use `.cache` and work without network access.
 Historical jQuery fixtures stay outside the dependency graph and the published package.
 
 `npm run build` replaces Grunt and writes the same four generated artifacts:
