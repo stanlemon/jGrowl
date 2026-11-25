@@ -390,7 +390,6 @@ describe.each(jquerySources)('jGrowl with jQuery $name', ({ source }) => {
     vi.advanceTimersByTime(200);
     expect(beforeClose).toBe(0);
     expect(close).toBe(1);
-    expect(notification.data('jGrowl.closing')).toBe(false);
     expect(messages()).toEqual(['Retry close']);
     notification.trigger('jGrowl.beforeClose');
     vi.advanceTimersByTime(200);
@@ -481,6 +480,37 @@ describe.each(jquerySources)('jGrowl with jQuery $name', ({ source }) => {
     update();
     notifications().trigger('jGrowl.beforeClose');
     expect(messages()).toEqual([]);
+  });
+
+  it('allows a close retry after its callback throws and the effects queue is recovered', () => {
+    const failure = new Error('Close failed once');
+    let attempts = 0;
+    $.jGrowl('Recover close', {
+      openDuration: 0,
+      closeDuration: 0,
+      animateClose: { opacity: 0 },
+      close: function () {
+        attempts += 1;
+        if (attempts === 1) throw failure;
+      },
+    });
+    update();
+    const notification = notifications();
+    let caught;
+    try {
+      notification.trigger('jGrowl.beforeClose');
+    } catch (error) {
+      caught = error;
+    }
+    expect(caught).toBe(failure);
+    expect(attempts).toBe(1);
+    // jQuery retains its in-progress queue when an animation callback throws.
+    notification.clearQueue().dequeue();
+    notification.trigger('jGrowl.beforeClose');
+    $.fx.tick();
+    expect(attempts).toBe(2);
+    expect(messages()).toEqual([]);
+    expect($.hasData(notification[0])).toBe(false);
   });
 
   it('passes click callback arguments without closing the notification', () => {

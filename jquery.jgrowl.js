@@ -381,13 +381,16 @@
 				// Keep the closing lock separate from hover and manual expiry pauses.
 				$(this).data('jGrowl.closing', true).data('jGrowl.pause', true);
 				$(this).animate(o.animateClose, o.closeDuration, o.easing, function() {
-					if ( typeof o.close === 'function' ) {
-						if ( o.close.apply( notification , [notification,message,o,self.element] ) !== false )
+					try {
+						if ( typeof o.close === 'function' ) {
+							if ( o.close.apply( notification , [notification,message,o,self.element] ) !== false )
+								$(this).remove();
+						} else {
 							$(this).remove();
-						else
-							$(this).data('jGrowl.closing', false);
-					} else {
-						$(this).remove();
+						}
+					} finally {
+						// A callback failure must not prevent an explicit retry.
+						$(this).removeData('jGrowl.closing');
 					}
 				});
 			}).trigger('jGrowl.beforeOpen');
