@@ -6,6 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { JSDOM } from 'jsdom';
 
 import { jqueryVersions } from './jquery-versions.mjs';
+import { npmVersions } from './npm-versions.mjs';
 const jquerySources = jqueryVersions.map(({ version: name }) => ({
   name,
   source: readFileSync(new URL('../.cache/jquery/' + name + '.js', import.meta.url), 'utf8'),
@@ -772,43 +773,65 @@ describe.each(jquerySources)('jGrowl with jQuery $name', ({ source }) => {
     expect(messages()).toEqual(['Window']);
   });
 
-  it('loads the jQuery 4 factory for CommonJS without a global window', () => {
+  it('loads the jQuery 4 factory after its main entry rejects a missing global window', () => {
     const module = { exports: {} };
+    const requests = [];
     let receivedRoot;
     const require = function (name) {
-      expect(name).toBe('jquery/factory');
+      requests.push(name);
+      if (name === 'jquery') throw new Error('jQuery requires a window with a document');
       return { jQueryFactory: function (root) { receivedRoot = root; return $; } };
     };
     new Script(pluginSource, { filename: resolve('jquery.jgrowl.js') }).runInNewContext({ module, require, setInterval, clearInterval });
     expect(module.exports(dom.window)).toBe($);
+    expect(requests).toEqual(['jquery', 'jquery/factory']);
     expect(receivedRoot).toBe(dom.window);
     $.jGrowl('Factory');
     update();
     expect(messages()).toEqual(['Factory']);
   });
 
-  it.each(['MODULE_NOT_FOUND', 'ERR_PACKAGE_PATH_NOT_EXPORTED'])('falls back to the legacy CommonJS factory for %s', (code) => {
+  it('uses a legacy CommonJS factory without probing another jQuery package', () => {
     const module = { exports: {} };
     const requests = [];
     let receivedRoot;
     const require = function (name) {
       requests.push(name);
-      if (name === 'jquery/factory') throw Object.assign(new Error('No factory export'), { code });
       return function (root) { receivedRoot = root; return $; };
     };
     new Script(pluginSource, { filename: resolve('jquery.jgrowl.js') }).runInNewContext({ module, require, setInterval, clearInterval });
     expect(module.exports(dom.window)).toBe($);
-    expect(requests).toEqual(['jquery/factory', 'jquery']);
+    expect(requests).toEqual(['jquery']);
     expect(receivedRoot).toBe(dom.window);
     $.jGrowl('Legacy factory');
     update();
     expect(messages()).toEqual(['Legacy factory']);
   });
 
-  it('propagates errors from the CommonJS factory instead of falling back', () => {
+  it('accepts a CommonJS jQuery module that is already initialized', () => {
+    const module = { exports: {} };
+    const requests = [];
+    const require = function (name) { requests.push(name); return $; };
+    new Script(pluginSource, { filename: resolve('jquery.jgrowl.js') }).runInNewContext({ module, require, setInterval, clearInterval });
+    expect(module.exports(dom.window)).toBe($);
+    expect(requests).toEqual(['jquery']);
+  });
+
+  it('propagates errors from the selected CommonJS package', () => {
+    const module = { exports: {} };
+    const failure = new Error('Dependency failed');
+    const require = function () { throw failure; };
+    new Script(pluginSource, { filename: resolve('jquery.jgrowl.js') }).runInNewContext({ module, require });
+    expect(() => module.exports(dom.window)).toThrow(failure);
+  });
+
+  it('propagates errors from the jQuery 4 factory', () => {
     const module = { exports: {} };
     const failure = new Error('Invalid window');
-    const require = function () { return { jQueryFactory: function () { throw failure; } }; };
+    const require = function (name) {
+      if (name === 'jquery') throw new Error('jQuery requires a window with a document');
+      return { jQueryFactory: function () { throw failure; } };
+    };
     new Script(pluginSource, { filename: resolve('jquery.jgrowl.js') }).runInNewContext({ module, require });
     expect(() => module.exports(dom.window)).toThrow(failure);
   });
@@ -830,6 +853,28 @@ describe('CommonJS entry point', () => {
       expect($('.jGrowl-message').text()).toBe('CommonJS');
       $('#jGrowl').jGrowl('shutdown');
     } finally {
+      dom.window.close();
+    }
+  });
+});
+
+
+describe.each(npmVersions)('CommonJS with published npm jQuery $version', ({ version }) => {
+  it('loads the actual package entry point and renders a notification', () => {
+    const dom = new JSDOM('<!doctype html><body></body>');
+    const consumerRequire = createRequire(resolve('.cache/npm', version, 'consumer.cjs'));
+    let jquery;
+    try {
+      jquery = consumerRequire('jgrowl')(dom.window);
+      expect(jquery.fn.jquery).toBe(version);
+      jquery.fx.off = true;
+      jquery.jGrowl('Published package', { sticky: true });
+      jquery('#jGrowl').jGrowl('update');
+      expect(jquery('.jGrowl-message').text()).toBe('Published package');
+    } finally {
+      if (jquery && jquery('#jGrowl').data('jGrowl.instance')) {
+        jquery('#jGrowl').jGrowl('shutdown');
+      }
       dom.window.close();
     }
   });

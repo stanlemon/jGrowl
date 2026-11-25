@@ -1,3 +1,4 @@
+import './prepare-npm-tests.mjs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { dirname } from 'node:path';

@@ -173,14 +173,22 @@
                     jQuery = require('jquery');
                 }
                 else {
-                    // jQuery 4 exports its window factory separately.
+                    // Resolve the selected jQuery before probing optional exports;
+                    // otherwise Node can find a newer copy in an ancestor directory.
                     try {
-                        jQuery = require('jquery/factory').jQueryFactory(root);
+                        var jqueryModule = require('jquery');
+                        jQuery = jqueryModule.fn ? jqueryModule : jqueryModule(root);
                     } catch (error) {
-                        if (error.code !== 'MODULE_NOT_FOUND' && error.code !== 'ERR_PACKAGE_PATH_NOT_EXPORTED') {
+                        if (error.message !== 'jQuery requires a window with a document') {
                             throw error;
                         }
-                        jQuery = require('jquery')(root);
+                        // Keep the optional export in a try block so browser bundlers
+                        // can build with older jQuery packages that do not provide it.
+                        try {
+                            jQuery = require('jquery/factory').jQueryFactory(root);
+                        } catch (factoryError) {
+                            throw factoryError;
+                        }
                     }
                 }
             }
