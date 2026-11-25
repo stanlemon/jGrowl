@@ -404,17 +404,21 @@
 
 		/** Setup the jGrowl Notification Container **/
 		startup: function(e) {
+			var self = this;
 			this.element = $(e).addClass('jGrowl').append('<div class="jGrowl-notification"></div>');
 			this.interval = setInterval( function() {
-				// some error in chage ^^
 				var instance = $(e).data('jGrowl.instance');
-				if (undefined !== instance) {
+				if (instance === self) {
 					try {
 						instance.update();
 					} catch (e) {
 						instance.shutdown();
 						throw e;
 					}
+				} else {
+					// Removing or replacing a container must not leave its timer running.
+					clearInterval(self.interval);
+					self.interval = null;
 				}
 			}, parseInt(this.defaults.check, 10));
 		},

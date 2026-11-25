@@ -454,6 +454,27 @@ describe.each(jquerySources)('jGrowl with jQuery $name', ({ source }) => {
     expect($('#jGrowl').hasClass('jGrowl')).toBe(true);
   });
 
+  it('stops the interval after its container is removed', () => {
+    $.jGrowl('Removed');
+    const instance = $('#jGrowl').data('jGrowl.instance');
+    $('#jGrowl').remove();
+    vi.advanceTimersByTime($.jGrowl.defaults.check);
+    expect(instance.interval).toBeNull();
+    expect($('#jGrowl')).toHaveLength(0);
+  });
+
+  it('stops the old interval when the container instance is replaced', () => {
+    $.jGrowl('Old pending message');
+    const oldInstance = $('#jGrowl').data('jGrowl.instance');
+    $('#jGrowl').removeData('jGrowl.instance');
+    $.jGrowl('Replacement');
+    const replacement = $('#jGrowl').data('jGrowl.instance');
+    vi.advanceTimersByTime($.jGrowl.defaults.check);
+    expect(oldInstance.interval).toBeNull();
+    expect(replacement.interval).not.toBeNull();
+    expect(messages()).toEqual(['Replacement']);
+  });
+
   it('shuts down one container without stopping another', () => {
     $('body').append('<div id="one"></div><div id="two"></div>');
     $('#one').jGrowl('One');
