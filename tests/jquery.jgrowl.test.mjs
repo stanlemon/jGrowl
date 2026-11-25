@@ -30,7 +30,8 @@ describe.each(jquerySources)('jGrowl with jQuery $name', ({ source }) => {
   beforeEach(() => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date('2026-01-01T00:00:00Z'));
-    dom = new JSDOM('<!doctype html><html><body></body></html>', { runScripts: 'outside-only', url: 'https://example.test/' });
+    // jQuery 3.0 skips animations when document.hidden is true.
+    dom = new JSDOM('<!doctype html><html><body></body></html>', { runScripts: 'outside-only', url: 'https://example.test/', pretendToBeVisual: true });
     dom.window.Date = Date;
     dom.window.setInterval = setInterval;
     dom.window.clearInterval = clearInterval;
@@ -265,6 +266,155 @@ describe.each(jquerySources)('jGrowl with jQuery $name', ({ source }) => {
     expect(messages('#other')).toEqual([]);
     notifications().first().trigger('mouseout');
     update();
+    expect(messages()).toEqual([]);
+  });
+
+  it('keeps new arrivals paused until the hovered notification is left', () => {
+    $.fx.off = false;
+    $.jGrowl('Hovered', { life: 10, openDuration: 0, closeDuration: 0 });
+    update();
+    const hovered = notifications().first();
+    hovered.trigger('mouseover');
+    $.jGrowl('Arrival', { life: 10, openDuration: 0, closeDuration: 0 });
+    update();
+    vi.setSystemTime(Date.now() + 11);
+    update();
+    expect(messages()).toEqual(['Hovered', 'Arrival']);
+    hovered.trigger('mouseout');
+    update();
+    expect(messages()).toEqual([]);
+  });
+
+  it.each(['close', 'remove'])('releases hover after its notification is removed by %s without mouseout', (action) => {
+    $.jGrowl('Hovered');
+    update();
+    const hovered = notifications();
+    hovered.trigger('mouseover');
+    if (action === 'close') hovered.trigger('jGrowl.beforeClose');
+    else hovered.remove();
+    $.jGrowl('Arrival after removal', { life: 1 });
+    update();
+    vi.setSystemTime(Date.now() + 2);
+    update();
+    expect(messages()).toEqual([]);
+    expect($('#jGrowl').data('jGrowl.pause')).toBe(false);
+    expect($('#jGrowl').data('jGrowl.hover')).toBeUndefined();
+  });
+
+  it('keeps the hover owner paused when an unhovered sibling leaves or closes', () => {
+    $.jGrowl('Hovered', { life: 1 });
+    $.jGrowl('Sibling', { life: 1 });
+    update('#jGrowl', 2);
+    const hovered = notifications().first();
+    const sibling = notifications().last();
+    hovered.trigger('mouseover');
+    sibling.trigger('mouseout').trigger('jGrowl.beforeClose');
+    vi.setSystemTime(Date.now() + 2);
+    update();
+    expect(messages()).toEqual(['Hovered']);
+    expect($('#jGrowl').data('jGrowl.pause')).toBe(true);
+    expect($('#jGrowl').data('jGrowl.hover')).toBe(hovered[0]);
+    hovered.trigger('mouseout');
+    update();
+    expect(messages()).toEqual([]);
+  });
+
+  it('does not clear a manual notification pause when hover ends', () => {
+    $.jGrowl('Manually paused', { life: 1 });
+    update();
+    const notification = notifications();
+    notification.data('jGrowl.pause', true).trigger('mouseover').trigger('mouseout');
+    vi.setSystemTime(Date.now() + 2);
+    update();
+    expect(messages()).toEqual(['Manually paused']);
+    notification.data('jGrowl.pause', false);
+    update();
+    expect(messages()).toEqual([]);
+  });
+
+  it('resets the container hover pause on shutdown', () => {
+    $.jGrowl('Hovered');
+    update();
+    notifications().trigger('mouseover');
+    expect($('#jGrowl').data('jGrowl.pause')).toBe(true);
+    $('#jGrowl').jGrowl('shutdown');
+    expect($('#jGrowl').data('jGrowl.pause')).toBeUndefined();
+    expect($('#jGrowl').data('jGrowl.hover')).toBeUndefined();
+    $.jGrowl('Restarted', { life: 1 });
+    update();
+    vi.setSystemTime(Date.now() + 2);
+    update();
+    expect(messages()).toEqual([]);
+  });
+
+  it('runs close callbacks once despite repeated clicks and hover during closing', () => {
+    $.fx.off = false;
+    let beforeClose = 0;
+    let close = 0;
+    $.jGrowl('Closing', {
+      life: 1, openDuration: 0, closeDuration: 100, animateClose: { opacity: 0 },
+      beforeClose: function () { beforeClose += 1; },
+      close: function () { close += 1; },
+    });
+    update();
+    const notification = notifications();
+    notification.find('.jGrowl-close').trigger('click').trigger('click');
+    notification.trigger('mouseover').trigger('mouseout');
+    expect(notification.data('jGrowl.pause')).toBe(true);
+    expect(notification.data('jGrowl.closing')).toBe(true);
+    notification.trigger('jGrowl.beforeClose').trigger('jGrowl.close');
+    notification.data('jGrowl.pause', false);
+    vi.setSystemTime(Date.now() + 2);
+    update();
+    expect(beforeClose).toBe(1);
+    expect(close).toBe(0);
+    vi.advanceTimersByTime(200);
+    expect(beforeClose).toBe(1);
+    expect(close).toBe(1);
+    expect(messages()).toEqual([]);
+  });
+
+  it('ignores repeated direct close events but permits retry after a close veto', () => {
+    $.fx.off = false;
+    let beforeClose = 0;
+    let close = 0;
+    $.jGrowl('Retry close', {
+      openDuration: 0, closeDuration: 100, animateClose: { opacity: 0 },
+      beforeClose: function () { beforeClose += 1; },
+      close: function () { close += 1; return close === 1 ? false : undefined; },
+    });
+    update();
+    const notification = notifications();
+    notification.trigger('jGrowl.close').trigger('jGrowl.close').trigger('jGrowl.close');
+    vi.advanceTimersByTime(200);
+    expect(beforeClose).toBe(0);
+    expect(close).toBe(1);
+    expect(notification.data('jGrowl.closing')).toBe(false);
+    expect(messages()).toEqual(['Retry close']);
+    notification.trigger('jGrowl.beforeClose');
+    vi.advanceTimersByTime(200);
+    expect(beforeClose).toBe(1);
+    expect(close).toBe(2);
+    expect(messages()).toEqual([]);
+  });
+
+  it('permits a later close after beforeClose vetoes an attempt with animations enabled', () => {
+    $.fx.off = false;
+    let beforeClose = 0;
+    let close = 0;
+    $.jGrowl('Retry before close', {
+      openDuration: 0, closeDuration: 100, animateClose: { opacity: 0 },
+      beforeClose: function () { beforeClose += 1; return beforeClose === 1 ? false : undefined; },
+      close: function () { close += 1; },
+    });
+    update();
+    const notification = notifications();
+    notification.trigger('jGrowl.beforeClose');
+    expect(messages()).toEqual(['Retry before close']);
+    notification.trigger('jGrowl.beforeClose').trigger('jGrowl.beforeClose');
+    vi.advanceTimersByTime(200);
+    expect(beforeClose).toBe(2);
+    expect(close).toBe(1);
     expect(messages()).toEqual([]);
   });
 

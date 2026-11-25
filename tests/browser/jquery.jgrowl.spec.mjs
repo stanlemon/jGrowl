@@ -50,6 +50,32 @@ for (const { version } of jqueryVersions) {
         await expect(page.locator('.jGrowl-message', { hasText: 'Sticky' })).toBeVisible();
       });
 
+      test('pauses notifications that arrive while the pointer stays over the container', async ({ page }) => {
+        await page.evaluate(() => {
+          jQuery.jGrowl('Hover anchor', { sticky: true, openDuration: 0, closeDuration: 0 });
+        });
+        const anchor = page.locator('.jGrowl-message', { hasText: 'Hover anchor' });
+        await expect(anchor).toBeVisible();
+        await anchor.hover();
+        await page.evaluate(() => {
+          jQuery.jGrowl('Arrived during hover', { life: 30000, openDuration: 0, closeDuration: 0 });
+        });
+        const arrival = page.locator('.jGrowl-message', { hasText: 'Arrived during hover' });
+        await expect(arrival).toBeVisible();
+        await page.evaluate(() => {
+          const notification = jQuery('.jGrowl-message').filter(function () {
+            return jQuery(this).text() === 'Arrived during hover';
+          }).parent();
+          notification.data('jGrowl').created = new Date(Date.now() - 60000);
+          jQuery('#jGrowl').jGrowl('update');
+        });
+        await expect(arrival).toBeVisible();
+        await page.mouse.move(0, 0);
+        await page.evaluate(() => jQuery('#jGrowl').jGrowl('update'));
+        await expect(arrival).toHaveCount(0);
+        await expect(anchor).toBeVisible();
+      });
+
       test('supports nested placement, Bootstrap groups, close all, and restart', async ({ page }) => {
         await page.evaluate(() => {
           jQuery.jGrowl.defaults.appendTo = '#host';

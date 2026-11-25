@@ -321,9 +321,10 @@
 
 			/** Notification Actions **/
 			$(notification).on("mouseover.jGrowl", function() {
-				$('.jGrowl-notification', self.element).data("jGrowl.pause", true);
+				$(self.element).data("jGrowl.pause", true).data('jGrowl.hover', this);
 			}).on("mouseout.jGrowl", function() {
-				$('.jGrowl-notification', self.element).data("jGrowl.pause", false);
+				if ( $(self.element).data('jGrowl.hover') === this )
+					$(self.element).data("jGrowl.pause", false).removeData('jGrowl.hover');
 			}).on('jGrowl.beforeOpen', function() {
 				if ( o.beforeOpen.apply( notification , [notification,message,o,self.element] ) !== false ) {
 					$(this).trigger('jGrowl.open');
@@ -353,15 +354,19 @@
 			}).on('click', function() {
 				o.click.apply( notification, [notification,message,o,self.element] );
 			}).on('jGrowl.beforeClose', function() {
+				if ( $(this).data('jGrowl.closing') === true ) return;
 				if ( o.beforeClose.apply( notification , [notification,message,o,self.element] ) !== false )
 					$(this).trigger('jGrowl.close');
 			}).on('jGrowl.close', function() {
-				// Pause the notification, lest during the course of animation another close event gets called.
-				$(this).data('jGrowl.pause', true);
+				if ( $(this).data('jGrowl.closing') === true ) return;
+				// Keep the closing lock separate from hover and manual expiry pauses.
+				$(this).data('jGrowl.closing', true).data('jGrowl.pause', true);
 				$(this).animate(o.animateClose, o.closeDuration, o.easing, function() {
-						if ( typeof o.close === 'function' ) {
+					if ( typeof o.close === 'function' ) {
 						if ( o.close.apply( notification , [notification,message,o,self.element] ) !== false )
 							$(this).remove();
+						else
+							$(this).data('jGrowl.closing', false);
 					} else {
 						$(this).remove();
 					}
@@ -388,10 +393,16 @@
 
 		/** Update the jGrowl Container, removing old jGrowl notifications **/
 		update: function() {
+			var hovered = $(this.element).data('jGrowl.hover');
+			// Removed notifications cannot deliver their mouseout event.
+			if ( hovered !== undefined && !$.contains(this.element[0], hovered) )
+				$(this.element).data('jGrowl.pause', false).removeData('jGrowl.hover');
+			var paused = $(this.element).data('jGrowl.pause') === true;
 			$(this.element).find('.jGrowl-notification:parent').each( function() {
-				if ($(this).data("jGrowl") !== undefined && $(this).data("jGrowl").created !== undefined &&
+				if (!paused && $(this).data("jGrowl") !== undefined && $(this).data("jGrowl").created !== undefined &&
 					($(this).data("jGrowl").created.getTime() + parseInt($(this).data("jGrowl").life, 10))  < (new Date()).getTime() &&
 					$(this).data("jGrowl").sticky !== true &&
+					$(this).data('jGrowl.closing') !== true &&
 					($(this).data("jGrowl.pause") === undefined || $(this).data("jGrowl.pause") !== true) ) {
 
 					// Pause the notification, lest during the course of animation another close event gets called.
@@ -440,7 +451,7 @@
 			clearInterval(this.interval);
 			this.interval = null;
 			this.notifications = [];
-			$(this.element).empty().removeData('jGrowl.instance');
+			$(this.element).empty().removeData('jGrowl.instance').removeData('jGrowl.pause').removeData('jGrowl.hover');
 		    }
 		},
 
