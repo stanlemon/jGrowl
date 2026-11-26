@@ -3,3 +3,7 @@ node_modules/
 jGrowl.iml
 jGrowl.ipr
 jGrowl.iws
+.cache/
+coverage/
+playwright-report/
+test-results/

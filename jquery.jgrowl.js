@@ -1,11 +1,11 @@
 /**
- * jGrowl 1.4.5
+ * jGrowl 1.6.0
  *
  * Dual licensed under the MIT (http://www.opensource.org/licenses/mit-license.php)
  * and GPL (http://www.opensource.org/licenses/gpl-license.php) licenses.
  *
  * Written by Stan Lemon <stosh1985@gmail.com>
- * Last updated: 2015.02.01
+ * Last updated: 2026.11.24
  *
  * jGrowl is a jQuery plugin implementing unobtrusive userland notifications.  These
  * notifications function similarly to the Growl Framework available for
@@ -13,6 +13,12 @@
  *
  * To Do:
  * - Move library settings to containers and allow them to be changed per container
+ *
+ * Changes in 1.6.0
+ * - Support jQuery 1.7 through 4.x, including the jQuery 4 CommonJS factory.
+ * - Add automated compatibility and browser tests.
+ * - Fix shutdown recovery and notifications closed during opening.
+ * - Replace Grunt while preserving the distributed artifacts.
  *
  * Changes in 1.4.5
  * - Fixed arguement list for click callback, thanks @timotheeg
@@ -167,7 +173,23 @@
                     jQuery = require('jquery');
                 }
                 else {
-                    jQuery = require('jquery')(root);
+                    // Resolve the selected jQuery before probing optional exports;
+                    // otherwise Node can find a newer copy in an ancestor directory.
+                    try {
+                        var jqueryModule = require('jquery');
+                        jQuery = jqueryModule.fn ? jqueryModule : jqueryModule(root);
+                    } catch (error) {
+                        if (error.message !== 'jQuery requires a window with a document') {
+                            throw error;
+                        }
+                        // Keep the optional export in a try block so browser bundlers
+                        // can build with older jQuery packages that do not provide it.
+                        try {
+                            jQuery = require('jquery/factory').jQueryFactory(root);
+                        } catch (factoryError) {
+                            throw factoryError;
+                        }
+                    }
                 }
             }
             factory(jQuery);
@@ -180,6 +202,11 @@
 
 	/** jGrowl Wrapper - Establish a base jGrowl Container for compatibility with older releases. **/
 	$.jGrowl = function( m , o ) {
+		if ( o === undefined && $.isPlainObject(m) ) {
+			o = m;
+			m = o.message;
+		}
+
 		// To maintain compatibility with older version that only supported one instance we'll create the base container.
 		if ( $('#jGrowl').length === 0 )
 			$('<div id="jGrowl"></div>').addClass( (o && o.position) ? o.position : $.jGrowl.defaults.position ).appendTo( (o && o.appendTo) ? o.appendTo : $.jGrowl.defaults.appendTo );
@@ -197,7 +224,7 @@
 			m = o.message;
 		}
 
-		if ( $.isFunction(this.each) ) {
+		if ( typeof this.each === 'function' ) {
 			var args = arguments;
 
 			return this.each(function() {
@@ -208,7 +235,10 @@
 				}
 
 				/** Optionally call jGrowl instance methods, or just raise a normal notification **/
-				if ( $.isFunction($(this).data('jGrowl.instance')[m]) ) {
+				if ( m !== 'constructor' &&
+					(Object.prototype.hasOwnProperty.call($(this).data('jGrowl.instance'), m) ||
+					Object.prototype.hasOwnProperty.call($.fn.jGrowl.prototype, m)) &&
+					typeof $(this).data('jGrowl.instance')[m] === 'function' ) {
 					$(this).data('jGrowl.instance')[m].apply( $(this).data('jGrowl.instance') , $.makeArray(args).slice(1) );
 				} else {
 					$(this).data('jGrowl.instance').create( m , o );
@@ -281,6 +311,10 @@
 			var self = this;
 			var message = n.message;
 			var o = n.options;
+			// User callbacks can shut down this instance and replace its container.
+			function ownsContainer() {
+				return $(self.element).data('jGrowl.instance') === self;
+			}
 
 			// Support for jQuery theme-states, if this is not used it displays a widget header
 			o.themeState = (o.themeState === '') ? '' : 'ui-state-' + o.themeState;
@@ -299,15 +333,19 @@
 
 			/** Notification Actions **/
 			$(notification).on("mouseover.jGrowl", function() {
-				$('.jGrowl-notification', self.element).data("jGrowl.pause", true);
+				$(self.element).data("jGrowl.pause", true).data('jGrowl.hover', this);
 			}).on("mouseout.jGrowl", function() {
-				$('.jGrowl-notification', self.element).data("jGrowl.pause", false);
+				if ( $(self.element).data('jGrowl.hover') === this )
+					$(self.element).data("jGrowl.pause", false).removeData('jGrowl.hover');
 			}).on('jGrowl.beforeOpen', function() {
-				if ( o.beforeOpen.apply( notification , [notification,message,o,self.element] ) !== false ) {
+				if ( ownsContainer() &&
+					o.beforeOpen.apply( notification , [notification,message,o,self.element] ) !== false && ownsContainer() ) {
 					$(this).trigger('jGrowl.open');
 				}
 			}).on('jGrowl.open', function() {
-				if ( o.open.apply( notification , [notification,message,o,self.element] ) !== false ) {
+				if ( ownsContainer() &&
+					o.open.apply( notification , [notification,message,o,self.element] ) !== false && ownsContainer() &&
+					$(this).data('jGrowl') !== undefined ) {
 					if ( o.glue == 'after' ) {
 						$('.jGrowl-notification', self.element).last().after(notification);
 					} else {
@@ -315,8 +353,12 @@
 					}
 
 					$(this).animate(o.animateOpen, o.openDuration, o.easing, function() {
+						if ( !ownsContainer() ) {
+							$(this).remove();
+							return;
+						}
 						// Fixes some anti-aliasing issues with IE filters.
-						if ($.support.opacity === false)
+						if ($.support && $.support.opacity === false)
 							this.style.removeAttribute('filter');
 
 						if ( $(this).data("jGrowl") !== null && typeof $(this).data("jGrowl") !== 'undefined') // Happens when a notification is closing before it's open.
@@ -326,37 +368,50 @@
 					});
 				}
 			}).on('jGrowl.afterOpen', function() {
-				o.afterOpen.apply( notification , [notification,message,o,self.element] );
+				if ( ownsContainer() )
+					o.afterOpen.apply( notification , [notification,message,o,self.element] );
 			}).on('click', function() {
 				o.click.apply( notification, [notification,message,o,self.element] );
 			}).on('jGrowl.beforeClose', function() {
+				if ( $(this).data('jGrowl.closing') === true ) return;
 				if ( o.beforeClose.apply( notification , [notification,message,o,self.element] ) !== false )
 					$(this).trigger('jGrowl.close');
 			}).on('jGrowl.close', function() {
-				// Pause the notification, lest during the course of animation another close event gets called.
-				$(this).data('jGrowl.pause', true);
+				if ( $(this).data('jGrowl.closing') === true ) return;
+				// Keep the closing lock separate from hover and manual expiry pauses.
+				$(this).data('jGrowl.closing', true).data('jGrowl.pause', true);
 				$(this).animate(o.animateClose, o.closeDuration, o.easing, function() {
-					if ( $.isFunction(o.close) ) {
-						if ( o.close.apply( notification , [notification,message,o,self.element] ) !== false )
+					try {
+						if ( typeof o.close === 'function' ) {
+							if ( o.close.apply( notification , [notification,message,o,self.element] ) !== false )
+								$(this).remove();
+						} else {
 							$(this).remove();
-					} else {
-						$(this).remove();
+						}
+					} finally {
+						// A callback failure must not prevent an explicit retry.
+						$(this).removeData('jGrowl.closing');
 					}
 				});
 			}).trigger('jGrowl.beforeOpen');
+
+			if ( !ownsContainer() ) {
+				notification.remove();
+				return;
+			}
 
 			/** Optional Corners Plugin **/
 			if ( o.corners !== '' && $.fn.corner !== undefined ) $(notification).corner( o.corners );
 
 			/** Add a Global Closer if more than one notification exists **/
-			if ($('.jGrowl-notification:parent', self.element).length > 1 &&
+			if (ownsContainer() && $('.jGrowl-notification:parent', self.element).length > 1 &&
 				$('.jGrowl-closer', self.element).length === 0 && this.defaults.closer !== false ) {
 				$(this.defaults.closerTemplate).addClass('jGrowl-closer ' + this.defaults.themeState + ' ui-corner-all').addClass(this.defaults.theme)
 					.appendTo(self.element).animate(this.defaults.animateOpen, this.defaults.speed, this.defaults.easing)
 					.on("click.jGrowl", function() {
 						$(this).siblings().trigger("jGrowl.beforeClose");
 
-						if ( $.isFunction( self.defaults.closer ) ) {
+						if ( typeof self.defaults.closer === 'function' ) {
 							self.defaults.closer.apply( $(this).parent()[0] , [$(this).parent()[0]] );
 						}
 					});
@@ -365,10 +420,16 @@
 
 		/** Update the jGrowl Container, removing old jGrowl notifications **/
 		update: function() {
+			var hovered = $(this.element).data('jGrowl.hover');
+			// Removed notifications cannot deliver their mouseout event.
+			if ( hovered !== undefined && !$.contains(this.element[0], hovered) )
+				$(this.element).data('jGrowl.pause', false).removeData('jGrowl.hover');
+			var paused = $(this.element).data('jGrowl.pause') === true;
 			$(this.element).find('.jGrowl-notification:parent').each( function() {
-				if ($(this).data("jGrowl") !== undefined && $(this).data("jGrowl").created !== undefined &&
+				if (!paused && $(this).data("jGrowl") !== undefined && $(this).data("jGrowl").created !== undefined &&
 					($(this).data("jGrowl").created.getTime() + parseInt($(this).data("jGrowl").life, 10))  < (new Date()).getTime() &&
 					$(this).data("jGrowl").sticky !== true &&
+					$(this).data('jGrowl.closing') !== true &&
 					($(this).data("jGrowl.pause") === undefined || $(this).data("jGrowl.pause") !== true) ) {
 
 					// Pause the notification, lest during the course of animation another close event gets called.
@@ -389,17 +450,21 @@
 
 		/** Setup the jGrowl Notification Container **/
 		startup: function(e) {
+			var self = this;
 			this.element = $(e).addClass('jGrowl').append('<div class="jGrowl-notification"></div>');
 			this.interval = setInterval( function() {
-				// some error in chage ^^
 				var instance = $(e).data('jGrowl.instance');
-				if (undefined !== instance) {
+				if (instance === self) {
 					try {
 						instance.update();
 					} catch (e) {
 						instance.shutdown();
 						throw e;
 					}
+				} else {
+					// Removing or replacing a container must not leave its timer running.
+					clearInterval(self.interval);
+					self.interval = null;
 				}
 			}, parseInt(this.defaults.check, 10));
 		},
@@ -407,16 +472,19 @@
 		/** Shutdown jGrowl, removing it and clearing the interval **/
 		shutdown: function() {
 		    try {
-			$(this.element).removeClass('jGrowl')
-			    .find('.jGrowl-notification').trigger('jGrowl.close')
-			    .parent().empty();
-		    } catch (e) {
-			throw e;
+			if ( $(this.element).data('jGrowl.instance') === this )
+				$(this.element).removeClass('jGrowl')
+				    .find('.jGrowl-notification:parent').trigger('jGrowl.close');
 		    } finally {
 			clearInterval(this.interval);
+			this.interval = null;
+			this.notifications = [];
+			if ( $(this.element).data('jGrowl.instance') === this )
+				$(this.element).empty().removeData('jGrowl.instance').removeData('jGrowl.pause').removeData('jGrowl.hover');
 		    }
 		},
 
+		/** Close the container's notifications, honoring close callbacks. **/
 		close: function() {
 			$(this.element).find('.jGrowl-notification').each(function(){
 				$(this).trigger('jGrowl.beforeClose');
