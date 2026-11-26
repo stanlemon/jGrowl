@@ -88,7 +88,7 @@ Load jQuery before jGrowl when you use browser script tags.
 
 ## Development
 
-Use Node.js 24 LTS and npm. Run `nvm use` if you use NVM.
+Use Node.js 26 LTS and npm. Run `nvm use` if you use NVM.
 
 ```sh
 npm ci
